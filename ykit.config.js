@@ -1,13 +1,14 @@
 var path = require('path');
 var AssetsPlugin = require('assets-webpack-plugin')
 var CompressionPlugin = require('compression-webpack-plugin')
+var commonLib = require('./common/lib.js');
 var assetsPluginInstance = new AssetsPlugin({
   filename: 'static/prd/assets.js',
   processOutput: function (assets) {
     return 'window.WEBPACK_ASSETS = ' + JSON.stringify(assets);
   }
 })
-var config = require('../config.json');
+
 
 var compressPlugin = new CompressionPlugin({
   asset: "[path].gz[query]",
@@ -25,79 +26,40 @@ function fileExist (filePath){
   }
 };
 
-function initPlugins(){
-  if(config.plugins && Array.isArray(config.plugins)){
-    config.plugins = config.plugins.filter(item=>{
-      return fileExist(path.resolve(__dirname, 'plugins/yapi-plugin-' + item + '/client.js'))
+function createScript(plugin, pathAlias){
+  let options = plugin.options ? JSON.stringify(plugin.options) : null
+  return `"${plugin.name}" : {module: require('${pathAlias}/yapi-plugin-${plugin.name}/client.js'),options: ${options}}`
+}
+
+function initPlugins(configPlugin){
+  var configPlugin = require('../config.json').plugins;
+  var systemConfigPlugin = require('./common/config.js').exts;
+
+  var scripts = [] ;
+  if(configPlugin && Array.isArray(configPlugin) && configPlugin.length){
+    configPlugin = commonLib.initPlugins(configPlugin, 'plugin');
+    configPlugin.forEach((plugin)=>{
+      if(plugin.client && plugin.enable){
+        scripts.push(createScript(plugin, 'plugins'))
+      }
+      
     })
+    
   }
+  
+  systemConfigPlugin = commonLib.initPlugins(systemConfigPlugin, 'ext');
+  systemConfigPlugin.forEach(plugin=>{
+    if(plugin.client && plugin.enable){
+      scripts.push(createScript(plugin, 'exts'))
+    }
+    
+  })
+
+  scripts = "module.exports = {" + scripts.join(",") + "}";
+  fs.writeFileSync('client/plugin-module.js', scripts);
 }
 
 initPlugins();
-
-
-function handleCommonsChunk(webpackConfig) {
-  var commonsChunk = {
-    vendors: {
-      lib: ['react', 'redux',
-        'redux-thunk',
-        'react-dom',
-        'redux-promise',
-        'react-router',
-        'react-router-dom',
-        'prop-types',
-        'axios',
-        'moment'
-
-      ],
-      lib2: [
-        'brace',
-        'mockjs',
-        'json5'
-      ]
-    }
-  },
-    chunks = [],
-    filenameTpl = webpackConfig.output[this.env],
-    vendors;
-
-
-
-  if (typeof commonsChunk === 'object' && commonsChunk !== undefined) {
-    if (typeof commonsChunk.name === 'string' && commonsChunk) {
-      chunks.push(commonsChunk.name);
-    }
-    vendors = commonsChunk.vendors;
-    if (typeof vendors === 'object' && vendors !== undefined) {
-      var i = 0;
-      for (var name in vendors) {
-        if (vendors.hasOwnProperty(name) && vendors[name]) {
-          i++;
-          chunks.push(name);
-          webpackConfig.entry[name] = Array.isArray(vendors[name]) ? vendors[name] : [vendors[name]];
-        }
-      }
-      if (i > 0) {
-        chunks.push('manifest');
-      }
-
-    }
-
-    if (chunks.length > 0) {
-      let chunkFilename = filenameTpl.filename
-      chunkFilename = chunkFilename.replace("[ext]", '.js')
-      webpackConfig.plugins.push(
-        new this.webpack.optimize.CommonsChunkPlugin({
-          name: chunks,
-          filename: chunkFilename,
-          minChunks: commonsChunk.minChunks ? commonsChunk.minChunks : 2
-        })
-      );
-
-    }
-  }
-}
-
 
 module.exports = {
   plugins: [{
@@ -113,15 +75,40 @@ module.exports = {
         defaultQuery.plugins.push(["import", { libraryName: "antd"}])
         return defaultQuery;
       },
-      exclude: /node_modules/
-    }
+      exclude: /node_modules\/(?!yapi-plugin)/
+    }    
   }],
   // devtool:  'cheap-source-map',
   config: function (ykit) {
     return {
-      exports: [
+      exports: [  
         './index.js'
       ],
+      commonsChunk: {
+        vendors: {
+          lib: ['react', 'redux',
+            'redux-thunk',
+            'react-dom',
+            'redux-promise',
+            'react-router',
+            'react-router-dom',
+            'prop-types',
+            'axios',
+            'moment',
+            'react-dnd-html5-backend',
+            'react-dnd',
+            'reactabular-table',
+            'reactabular-dnd',
+            'table-resolver'
+          ],
+          lib2: [
+            'brace',
+            'mockjs',
+            'json5',
+            'url'
+          ]
+        }
+      },
       modifyWebpackConfig: function (baseConfig) {
 
         var ENV_PARAMS = {};
@@ -139,21 +126,22 @@ module.exports = {
         }
 
         baseConfig.plugins.push(new this.webpack.DefinePlugin({
-          'process.env.NODE_ENV': JSON.stringify(ENV_PARAMS),
-          'process.env.config': JSON.stringify(config)
+          'process.env.NODE_ENV': JSON.stringify(ENV_PARAMS)
         }))
 
         //初始化配置
         baseConfig.devtool = 'cheap-module-eval-source-map'
         baseConfig.context = path.resolve(__dirname, './client');
+        baseConfig.resolve.alias.client = '/client';
         baseConfig.resolve.alias.common = '/common';
-        baseConfig.resolve.alias.plugins = '/plugins';
+        baseConfig.resolve.alias.plugins = '/node_modules';
+        baseConfig.resolve.alias.exts = '/exts';
         baseConfig.output.prd.path = 'static/prd';
         baseConfig.output.prd.publicPath = '';
         baseConfig.output.prd.filename = '[name]@[chunkhash][ext]'
 
-        //commonsChunk
-        handleCommonsChunk.call(this, baseConfig)
+       
+        
         baseConfig.module.loaders.push({
           test: /\.less$/,
           loader: ykit.ExtractTextPlugin.extract(
@@ -178,6 +166,11 @@ module.exports = {
         });
 
         if (this.env == 'prd') {
+          baseConfig.plugins.push(new this.webpack.optimize.UglifyJsPlugin({
+            compress: {
+              warnings: false
+            }
+          }))
           baseConfig.plugins.push(assetsPluginInstance)
           baseConfig.plugins.push(compressPlugin)
 
