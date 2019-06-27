@@ -1,7 +1,23 @@
 const path = require('path');
 const fs = require('fs-extra');
 const nodemailer = require('nodemailer');
-const config = require('../../config.json');
+require('dotenv').config();
+
+// const config = require('../../config.json');
+
+const config = {
+  host: process.env.HOST || '0.0.0.0',
+  port: process.env.PORT || 8080,
+  adminAccount: process.env.ADMIN_EMAIL,
+  db: {
+    servername: process.env.DB_HOST,
+    DATABASE: process.env.DB_NAME,
+    port: process.env.DB_PORT || 27017,
+    user: process.env.DB_USER || "",
+    pass: process.env.DB_PASS || "",
+    authSource: process.env.DB_AUTH_SOURCE || "",
+  },
+};
 
 let insts = new Map();
 let mail;
