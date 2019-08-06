@@ -56,7 +56,7 @@ const MenuUser = props => (
       );
     })}
     <Menu.Item key="9">
-      <a onClick={props.logout}>
+      <a href="/api/user/logout">
         <Icon type="logout" />退出
       </a>
     </Menu.Item>
