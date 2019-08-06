@@ -21,6 +21,8 @@ const router = require('./router.js');
 const fetch = require('node-fetch');
 const jwt = require('jsonwebtoken');
 const delay = require('@zcorky/delay').delay;
+const uuid = require('uuid/v4');
+const moment = require('@zcorky/moment').moment;
 
 const userModel = require('./models/user.js');
 
@@ -175,6 +177,48 @@ async function ssoOnlySolution(ctx) {
   // not ticket => go sso
   await ctx.redirect(SSO_AUTH_SERVER_URL);
 }
+
+app.use(async function accesslog(ctx, next) {
+  // static file
+  if (ctx.request.path.startsWith('/prd/')) {
+    return await next();
+  }
+
+  ctx.requestId = uuid();
+
+  await next();
+
+  ctx.set('X-Request-Id', ctx.requestId);
+
+  const log = {
+    requestId: ctx.requestId,
+    ip: ctx.ip || '-',
+    time: moment().format('YYYY-MM-DD HH:mm:ss'),
+    request: `${ctx.method} ${ctx.path}`,
+    status: ctx.status !== 404
+      ? ctx.status : !!ctx.body
+      ? 200 : 404,
+    responseTime: ctx.responseTime,
+    bodyBytesSent: ctx.get('Content-Length') || '-',
+    httpRefer: ctx.get('Referer') || '-',
+    httpUserAgent: ctx.get('User-Agent') || '-',
+  };
+
+  console.log(`${log.ip} [${log.time}] "${log.request}" ${log.status} ${log.responseTime} ${log.bodyBytesSent} "${log.httpRefer}" ${log.httpUserAgent} ${log.requestId}`);
+});
+
+app.use(async function responseTime(ctx, next) {
+  const start = process.hrtime();
+
+  await next();
+
+  const deltaHr = process.hrtime(start);
+  const delta =  Math.round(deltaHr[0] * 1000 + deltaHr[1] / 1000000);
+
+  ctx.responseTime = delta;
+
+  ctx.set('X-Response-Time', `${delta}ms`);
+});
 
 app.use(async (ctx, next) => {
   // static file
