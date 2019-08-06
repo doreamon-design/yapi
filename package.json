@@ -30,6 +30,7 @@
   "author": "",
   "license": "Apache-2.0",
   "dependencies": {
+    "@zcorky/moment": "^1.0.11",
     "ajv": "^5.5.1",
     "ajv-i18n": "^2.2.0",
     "axios": "0.18.1",
@@ -83,9 +84,10 @@
     "tslib": "1.8.0",
     "underscore": "1.8.3",
     "url": "0.11.0",
-    "yapi-plugin-qsso": "^1.1.0",
     "qs": "^6.7.0",
-    "vm2": "^3.8.4"
+    "vm2": "^3.8.4",
+    "uuid": "^3.3.2",
+    "yapi-plugin-qsso": "^1.1.0"
   },
   "devDependencies": {
     "@types/node-fetch": "^2.5.0",
