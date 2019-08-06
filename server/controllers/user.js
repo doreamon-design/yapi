@@ -1,3 +1,5 @@
+const fetch = require('node-fetch');
+
 const userModel = require('../models/user.js');
 const yapi = require('../yapi.js');
 const baseController = require('./base.js');
@@ -79,6 +81,15 @@ class userController extends baseController {
   async logout(ctx) {
     ctx.cookies.set('_yapi_token', null);
     ctx.cookies.set('_yapi_uid', null);
+
+    if (yapi.WEBCONFIG.sso.only && yapi.WEBCONFIG.sso.server_logout_url) {
+      // const res = await fetch(yapi.WEBCONFIG.sso.server_logout_url);
+      // const data = await res.json();
+      // console.log('logout sso only: ', res.status, data);
+      ctx.redirect(yapi.WEBCONFIG.sso.server_logout_url + `${ctx.protocol}://${ctx.host}/login?type=sso`);
+      return ;
+    }
+
     ctx.body = yapi.commons.resReturn('ok');
   }
 
