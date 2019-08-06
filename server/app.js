@@ -99,43 +99,33 @@ async function loginOrCreate(ctx, email, username) {
     let user = await userInst.save(data);
 
     // user doesnot exist
-    await setLoginCookie(ctx, user._id, user.passsalt);
+    await setLoginCookie(ctx, user._id, user.passsalt, email);
   } else {
     // user exits
-    await setLoginCookie(ctx, result._id, result.passsalt);
+    await setLoginCookie(ctx, result._id, result.passsalt, email);
   }
 }
 
-async function setLoginCookie(ctx, uid, passsalt) {
+async function setLoginCookie(ctx, uid, passsalt, email) {
   let token = jwt.sign({ uid: uid }, passsalt, { expiresIn: '7 days' });
 
   ctx.cookies.set('_yapi_token', token, {
     expires: yapi.commons.expireDate(7),
     httpOnly: true
   });
+
   ctx.cookies.set('_yapi_uid', uid, {
+    expires: yapi.commons.expireDate(7),
+    httpOnly: true
+  });
+
+  ctx.cookies.set('_yapi_email', email, {
     expires: yapi.commons.expireDate(7),
     httpOnly: true
   });
 }
 
-app.use(async (ctx, next) => {
-  // sso only false
-  if (!yapi.WEBCONFIG.sso.only) {
-    return await next();
-  }
-
-  // static file
-  if (ctx.request.path.startsWith('/prd/')) {
-    return await next();
-  }
-
-  // check is authorized
-  const authorized = await checkAuthorize(ctx);
-  if (authorized) {
-    return await next();
-  }
-
+async function ssoOnlySolution(ctx) {
   // ticket && path === login && method === post => login or register
   const type = ctx.request.query.type;
   const path = ctx.path;
@@ -148,7 +138,7 @@ app.use(async (ctx, next) => {
   const SSO_AUTH_USER_URL = yapi.WEBCONFIG.sso.user_url + token;
 
   // console.log('x: ', type, ticket, path, method, ctx.query, ctx.request.query);
-  if (type === 'sso' && path === '/login' && method === 'GET') {
+  if (type === 'sso' && token && path === '/login' && method === 'GET') {
     // get sso user
     const res = await fetch(SSO_AUTH_USER_URL);
 
@@ -168,6 +158,9 @@ app.use(async (ctx, next) => {
       console.log('sso get user failed by result.');
 
       // ticket invalid
+      // @TODO
+      //   sso only => go sso login
+      //   sso => go self login
       await ctx.redirect(SSO_AUTH_SERVER_URL);
       
       return ;
@@ -182,6 +175,27 @@ app.use(async (ctx, next) => {
 
   // not ticket => go sso
   await ctx.redirect(SSO_AUTH_SERVER_URL);
+}
+
+app.use(async (ctx, next) => {
+  // static file
+  if (ctx.request.path.startsWith('/prd/')) {
+    return await next();
+  }
+
+  // check is authorized
+  const authorized = await checkAuthorize(ctx);
+  if (authorized) {
+    return await next();
+  }
+
+  // sso only false
+  if (!yapi.WEBCONFIG.sso.only) {
+    return await next();
+  }
+
+  // sso only
+  await ssoOnlySolution(ctx);
 });
 
 app.use(router.routes());
