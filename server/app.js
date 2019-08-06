@@ -90,9 +90,9 @@ async function loginOrCreate(ctx, email, username) {
     let data = {
       username: username,
       password: yapi.commons.generatePassword(password, passsalt), //加密
-      email: email,
+      email,
       passsalt: passsalt,
-      role: 'member',
+      role: yapi.WEBCONFIG.adminAccount === email ? 'admin' : 'member',
       add_time: yapi.commons.time(),
       up_time: yapi.commons.time(),
       type: 'site',
