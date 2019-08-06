@@ -263,6 +263,7 @@ export default class HeaderCom extends Component {
         if (res.payload.data.errcode == 0) {
           this.props.history.push('/');
           this.props.changeMenuItem('/');
+          location.reload();
           message.success('退出成功! ');
         } else {
           message.error(res.payload.data.errmsg);

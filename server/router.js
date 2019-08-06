@@ -609,4 +609,10 @@ for (let ctrl in routerConfig) {
   });
 }
 
+router.get('*', async (ctx, next) => {
+  // ctx.body = 'done';
+
+  await next();
+});
+
 module.exports = router;
