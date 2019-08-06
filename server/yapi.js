@@ -10,6 +10,7 @@ if (!!process.env.SSO_ONLY) {
   assert(process.env.SSO_TOKEN_KEY, 'sso only mode: SSO_TOKEN_KEY should be provided');
   assert(process.env.SSO_AUTH_SERVER_URL, 'sso only mode: SSO_AUTH_SERVER_URL should be provided');
   assert(process.env.SSO_AUTH_USER_URL, 'sso only mode: SSO_AUTH_USER_URL should be provided');
+  assert(process.env.SSO_AUTH_SERVER_LOGOUT_URL, 'sso only mode: SSO_AUTH_SERVER_LOGOUT_URL should be provided');
 }
 
 const config = {
@@ -29,6 +30,7 @@ const config = {
     token_key: process.env.SSO_TOKEN_KEY || 'ticket',
     server_url: process.env.SSO_AUTH_SERVER_URL,
     user_url: process.env.SSO_AUTH_USER_URL,
+    server_logout_url: process.env.SSO_AUTH_SERVER_LOGOUT_URL,
   },
 };
 
