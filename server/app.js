@@ -19,6 +19,12 @@ const koaStatic = require('koa-static');
 const koaBody = require('koa-body');
 const router = require('./router.js');
 
+const fetch = require('node-fetch');
+const jwt = require('jsonwebtoken');
+const delay = require('@zcorky/delay').delay;
+
+const userModel = require('./models/user.js');
+
 global.storageCreator = storageCreator;
 let indexFile = process.argv[2] === 'dev' ? 'dev.html' : 'index.html';
 
@@ -29,6 +35,155 @@ yapi.app = app;
 // app.use(bodyParser({multipart: true}));
 app.use(koaBody({ multipart: true, jsonLimit: '2mb', formLimit: '1mb', textLimit: '1mb' }));
 app.use(mockServer);
+
+async function checkAuthorize(ctx) {
+  let token = ctx.cookies.get('_yapi_token');
+  let uid = ctx.cookies.get('_yapi_uid');
+  try {
+    if (!token || !uid) {
+      return false;
+    }
+    let userInst = yapi.getInst(userModel); //创建user实体
+    let result = await userInst.findById(uid);
+    if (!result) {
+      return false;
+    }
+
+    let decoded;
+    try {
+      decoded = jwt.verify(token, result.passsalt);
+    } catch (err) {
+      return false;
+    }
+
+    if (decoded.uid == uid) {
+      this.$uid = uid;
+      this.$auth = true;
+      this.$user = result;
+      return true;
+    }
+
+    return false;
+  } catch (e) {
+    yapi.commons.log(e, 'error');
+    return false;
+  }
+}
+
+async function loginOrCreate(ctx, email, username) {
+  //登录
+  console.log('loginOrCreate: ', email, username);
+  let userInst = yapi.getInst(userModel); //创建user实体
+
+  if (!email) {
+    return (ctx.body = yapi.commons.resReturn(null, 400, 'email不能为空'));
+  }
+
+  let result = await userInst.findByEmail(email);
+
+  if (!result) {
+    // create
+    let passsalt = yapi.commons.randStr();
+    let password = yapi.commons.randStr();
+    let data = {
+      username: username,
+      password: yapi.commons.generatePassword(password, passsalt), //加密
+      email: email,
+      passsalt: passsalt,
+      role: 'member',
+      add_time: yapi.commons.time(),
+      up_time: yapi.commons.time(),
+      type: 'site',
+    };
+
+    let user = await userInst.save(data);
+
+    // user doesnot exist
+    await setLoginCookie(ctx, user._id, user.passsalt);
+  } else {
+    // user exits
+    await setLoginCookie(ctx, result._id, result.passsalt);
+  }
+}
+
+async function setLoginCookie(ctx, uid, passsalt) {
+  let token = jwt.sign({ uid: uid }, passsalt, { expiresIn: '7 days' });
+
+  ctx.cookies.set('_yapi_token', token, {
+    expires: yapi.commons.expireDate(7),
+    httpOnly: true
+  });
+  ctx.cookies.set('_yapi_uid', uid, {
+    expires: yapi.commons.expireDate(7),
+    httpOnly: true
+  });
+}
+
+app.use(async (ctx, next) => {
+  // sso only false
+  if (!yapi.WEBCONFIG.sso.only) {
+    return await next();
+  }
+
+  // static file
+  if (ctx.request.path.startsWith('/prd/')) {
+    return await next();
+  }
+
+  // check is authorized
+  const authorized = await checkAuthorize(ctx);
+  if (authorized) {
+    return await next();
+  }
+
+  // ticket && path === login && method === post => login or register
+  const type = ctx.request.query.type;
+  const path = ctx.path;
+  const method = ctx.method;
+
+  const target = encodeURIComponent(`${ctx.protocol}://${ctx.host}/login?type=sso`);
+
+  const token = ctx.request.query[yapi.WEBCONFIG.sso.token_key];
+  const SSO_AUTH_SERVER_URL = yapi.WEBCONFIG.sso.server_url + target;
+  const SSO_AUTH_USER_URL = yapi.WEBCONFIG.sso.user_url + token;
+
+  // console.log('x: ', type, ticket, path, method, ctx.query, ctx.request.query);
+  if (type === 'sso' && path === '/login' && method === 'GET') {
+    // get sso user
+    const res = await fetch(SSO_AUTH_USER_URL);
+
+    if (res.status !== 200) {
+      console.log('sso get user failed.');
+      await delay(3000);
+      await ctx.redirect(SSO_AUTH_SERVER_URL);
+      
+      return ;
+    }
+
+    const user = await res.json();
+    console.log('sso user: ', user);
+
+    // 
+    if (user.result === false) {
+      console.log('sso get user failed by result.');
+
+      // ticket invalid
+      await ctx.redirect(SSO_AUTH_SERVER_URL);
+      
+      return ;
+    }
+
+    // check user => login or sso
+    await loginOrCreate(ctx, user.email, user.username);
+    await ctx.redirect(`/`);
+    return ;
+  }
+
+
+  // not ticket => go sso
+  await ctx.redirect(SSO_AUTH_SERVER_URL);
+});
+
 app.use(router.routes());
 app.use(router.allowedMethods());
 
