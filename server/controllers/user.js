@@ -197,7 +197,7 @@ class userController extends baseController {
           password: yapi.commons.generatePassword(passsalt, passsalt),
           email: email,
           passsalt: passsalt,
-          role: 'member',
+          role: yapi.WEBCONFIG.adminAccount === email ? 'admin' : 'member',
           add_time: yapi.commons.time(),
           up_time: yapi.commons.time(),
           type: 'third'
@@ -340,7 +340,7 @@ class userController extends baseController {
       password: yapi.commons.generatePassword(params.password, passsalt), //加密
       email: params.email,
       passsalt: passsalt,
-      role: 'member',
+      role: yapi.WEBCONFIG.adminAccount === params.email ? 'admin' : 'member',
       add_time: yapi.commons.time(),
       up_time: yapi.commons.time(),
       type: 'site'
