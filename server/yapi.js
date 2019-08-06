@@ -1,21 +1,34 @@
 const path = require('path');
 const fs = require('fs-extra');
 const nodemailer = require('nodemailer');
+const assert = require('assert');
 require('dotenv').config();
 
 // const config = require('../../config.json');
+
+if (!!process.env.SSO_ONLY) {
+  assert(process.env.SSO_TOKEN_KEY, 'sso only mode: SSO_TOKEN_KEY should be provided');
+  assert(process.env.SSO_AUTH_SERVER_URL, 'sso only mode: SSO_AUTH_SERVER_URL should be provided');
+  assert(process.env.SSO_AUTH_USER_URL, 'sso only mode: SSO_AUTH_USER_URL should be provided');
+}
 
 const config = {
   host: process.env.HOST || '0.0.0.0',
   port: process.env.PORT || 8080,
   adminAccount: process.env.ADMIN_EMAIL,
   db: {
-    servername: process.env.DB_HOST,
-    DATABASE: process.env.DB_NAME,
+    servername: process.env.DB_HOST || '127.0.0.1',
+    DATABASE: process.env.DB_NAME || 'yapi',
     port: process.env.DB_PORT || 27017,
     user: process.env.DB_USER || "",
     pass: process.env.DB_PASS || "",
     authSource: process.env.DB_AUTH_SOURCE || "",
+  },
+  sso: {
+    only: !!process.env.SSO_ONLY,
+    token_key: process.env.SSO_TOKEN_KEY || 'ticket',
+    server_url: process.env.SSO_AUTH_SERVER_URL,
+    user_url: process.env.SSO_AUTH_USER_URL,
   },
 };
 
