@@ -100,9 +100,18 @@ async function loginOrCreate(ctx, email, username) {
     let user = await userInst.save(data);
 
     // user doesnot exist
+    console.log(`${moment().format('YYYY-MM-DD HH:mm:ss')} [user][new] login success`);
     await setLoginCookie(ctx, user._id, user.passsalt, email);
   } else {
+    // update admin by email
+    if (yapi.WEBCONFIG.adminAccount === email && result.role !== 'admin') {
+      console.log(`${moment().format('YYYY-MM-DD HH:mm:ss')} [user][admin] update admin on email: ${email}`);
+      result.role = 'admin';
+      await result.save();
+    }
+
     // user exits
+    console.log(`${moment().format('YYYY-MM-DD HH:mm:ss')} [user][exist] login success`);
     await setLoginCookie(ctx, result._id, result.passsalt, email);
   }
 }
