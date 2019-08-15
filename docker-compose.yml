@@ -3,12 +3,22 @@ version: "3"
 services:
   web:
     restart: unless-stopped
-    image: whatwewant/yapi
+    image: whatwewant/yapi:1.2.1
     environment:
+      # SITE_HOST: example.com
+      # SITE_PROTOCOL: http
       HOST: 0.0.0.0
       PORT: 8080
       DB_HOST: mongo
       DB_NAME: yapi
+      # DB_USER: yapi
+      # DB_PASS: yapi
+      ADMIN_EMAIL: tobewhatwewant@gmail.com
+      SSO_ONLY: 'true'
+      SSO_TOKEN_KEY: ticket
+      SSO_AUTH_SERVER_URL: http://example.com/login/?client_id=YOUR_CLIENT_ID&target=
+      SSO_AUTH_USER_URL: http://example.com/validate?client_id=YOUR_CLIENT_ID&ticket=
+      SSO_AUTH_SERVER_LOGOUT_URL: http://example.com/logout?target=
     ports:
       - 3000:8080
   
