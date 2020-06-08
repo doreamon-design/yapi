@@ -210,7 +210,7 @@ hooks = {
   },
   logout: {
     path: '',
-    name: '退出',
+    name: '',
     icon: 'logout',
     adminFlag: false
 

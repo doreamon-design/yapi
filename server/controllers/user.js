@@ -11,6 +11,17 @@ const groupModel = require('../models/group.js');
 const projectModel = require('../models/project.js');
 const avatarModel = require('../models/avatar.js');
 
+function getPrefix(ctx) {
+  if (yapi.WEBCONFIG.root_url) {
+    return yapi.WEBCONFIG.root_url;
+  }
+
+  const protocol = process.env.SITE_PROTOCOL || ctx.protocol;
+  const host = process.env.SITE_HOST || ctx.host;
+  
+  return `${protocol}://${host}`;
+}
+
 const jwt = require('jsonwebtoken');
 
 class userController extends baseController {
@@ -87,7 +98,7 @@ class userController extends baseController {
       // const res = await fetch(yapi.WEBCONFIG.sso.server_logout_url);
       // const data = await res.json();
       // console.log('logout sso only: ', res.status, data);
-      ctx.redirect(yapi.WEBCONFIG.sso.server_logout_url + `${ctx.protocol}://${ctx.host}/login/sso/callback`);
+      ctx.redirect(yapi.WEBCONFIG.sso.server_logout_url + `${getPrefix(ctx)}/login/sso/callback`);
       return ;
     }
 
