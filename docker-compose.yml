@@ -15,13 +15,13 @@ services:
       # DB_USER: yapi
       # DB_PASS: yapi
       ADMIN_EMAIL: tobewhatwewant@gmail.com
-      ROOT_URL: http://mydomain.com
+      # ROOT_URL: https://mydomain.com
       USERNAME_KEY: 'result.username'
       EMAIL_KEY: 'result.email'
       SSO_ONLY: 'true'
       SSO_TOKEN_KEY: code
-      SSO_AUTH_SERVER_URL: http://example.com/authorize?client_id=CLIENT_ID&redirect_uri=
-      SSO_AUTH_USER_URL: http://example.com/api/user?code=
+      SSO_AUTH_SERVER_URL: https://oauth.nuanwa.net/a2/authorize?client_id=api-docs&redirect_uri=
+      SSO_AUTH_USER_URL: https://oauth.nuanwa.net/api/user?code=
       SSO_AUTH_SERVER_LOGOUT_URL: http://example.com/logout?target=
     ports:
       - 3000:8080

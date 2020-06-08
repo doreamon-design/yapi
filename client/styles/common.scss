@@ -78,7 +78,7 @@ em {
   background-color: #eceef1;
   &::after {
     content: '';
-    display: block;
+    display: none;
     height: 2.4rem;
   }
 }
