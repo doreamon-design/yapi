@@ -136,9 +136,9 @@ async function setLoginCookie(ctx, uid, passsalt, email) {
   });
 }
 
-function getPrefix() {
-  if (yapi.WEBCONFIG.sso.root_url) {
-    return yapi.WEBCONFIG.sso.root_url;
+function getPrefix(ctx) {
+  if (yapi.WEBCONFIG.root_url) {
+    return yapi.WEBCONFIG.root_url;
   }
 
   const protocol = process.env.SITE_PROTOCOL || ctx.protocol;
@@ -153,7 +153,7 @@ async function ssoOnlySolution(ctx) {
   const path = ctx.path;
   const method = ctx.method;
 
-  const target = encodeURIComponent(`${getPrefix()}/login?type=sso`);
+  const target = encodeURIComponent(`${getPrefix(ctx)}/login?type=sso`);
 
   const token = ctx.request.query[yapi.WEBCONFIG.sso.token_key];
   const SSO_AUTH_SERVER_URL = yapi.WEBCONFIG.sso.server_url + target;
