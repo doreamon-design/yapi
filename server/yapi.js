@@ -25,6 +25,7 @@ const config = {
     pass: process.env.DB_PASS || "",
     authSource: process.env.DB_AUTH_SOURCE || "",
   },
+  root_url: process.env.ROOT_URL,
   sso: {
     only: !!process.env.SSO_ONLY,
     token_key: process.env.SSO_TOKEN_KEY || 'ticket',
