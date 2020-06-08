@@ -24,6 +24,7 @@ const jwt = require('jsonwebtoken');
 const delay = require('@zcorky/delay').delay;
 const uuid = require('uuid/v4');
 const moment = require('@zcorky/moment').moment;
+const lodash = require('lodash');
 
 const userModel = require('./models/user.js');
 
@@ -153,14 +154,14 @@ async function ssoOnlySolution(ctx) {
   const path = ctx.path;
   const method = ctx.method;
 
-  const target = encodeURIComponent(`${getPrefix(ctx)}/login?type=sso`);
+  const target = encodeURIComponent(`${getPrefix(ctx)}/login/sso/callback`);
 
   const token = ctx.request.query[yapi.WEBCONFIG.sso.token_key];
   const SSO_AUTH_SERVER_URL = yapi.WEBCONFIG.sso.server_url + target;
   const SSO_AUTH_USER_URL = yapi.WEBCONFIG.sso.user_url + token;
 
   // console.log('x: ', type, ticket, path, method, ctx.query, ctx.request.query);
-  if (type === 'sso' && token && path === '/login' && method === 'GET') {
+  if (token && path === '/login/sso/callback' && method === 'GET') {
     // get sso user
     const res = await fetch(SSO_AUTH_USER_URL);
 
@@ -188,8 +189,11 @@ async function ssoOnlySolution(ctx) {
       return ;
     }
 
+    const email = lodash.get(user, yapi.WEBCONFIG.user.emailKey);
+    const username = lodash.get(user, yapi.WEBCONFIG.user.usernameKey);
+
     // check user => login or sso
-    await loginOrCreate(ctx, user.email, user.username);
+    await loginOrCreate(ctx, email, username);
     await ctx.redirect(`/`);
     return ;
   }

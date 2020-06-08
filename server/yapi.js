@@ -33,6 +33,10 @@ const config = {
     user_url: process.env.SSO_AUTH_USER_URL,
     server_logout_url: process.env.SSO_AUTH_SERVER_LOGOUT_URL,
   },
+  user: {
+    usernameKey: process.env.USERNAME_KEY || 'username',
+    emailKey: process.env.EMAIL_KEY || 'email',
+  },
 };
 
 let insts = new Map();

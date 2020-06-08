@@ -87,7 +87,7 @@ class userController extends baseController {
       // const res = await fetch(yapi.WEBCONFIG.sso.server_logout_url);
       // const data = await res.json();
       // console.log('logout sso only: ', res.status, data);
-      ctx.redirect(yapi.WEBCONFIG.sso.server_logout_url + `${ctx.protocol}://${ctx.host}/login?type=sso`);
+      ctx.redirect(yapi.WEBCONFIG.sso.server_logout_url + `${ctx.protocol}://${ctx.host}/login/sso/callback`);
       return ;
     }
 

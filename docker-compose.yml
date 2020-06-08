@@ -3,7 +3,8 @@ version: "3"
 services:
   web:
     restart: unless-stopped
-    image: whatwewant/yapi:1.2.1
+    # image: whatwewant/yapi:1.2.4
+    build: .
     environment:
       # SITE_HOST: example.com
       # SITE_PROTOCOL: http
@@ -14,10 +15,13 @@ services:
       # DB_USER: yapi
       # DB_PASS: yapi
       ADMIN_EMAIL: tobewhatwewant@gmail.com
+      ROOT_URL: http://mydomain.com
+      USERNAME_KEY: 'result.username'
+      EMAIL_KEY: 'result.email'
       SSO_ONLY: 'true'
-      SSO_TOKEN_KEY: ticket
-      SSO_AUTH_SERVER_URL: http://example.com/login/?client_id=YOUR_CLIENT_ID&target=
-      SSO_AUTH_USER_URL: http://example.com/validate?client_id=YOUR_CLIENT_ID&ticket=
+      SSO_TOKEN_KEY: code
+      SSO_AUTH_SERVER_URL: http://example.com/authorize?client_id=CLIENT_ID&redirect_uri=
+      SSO_AUTH_USER_URL: http://example.com/api/user?code=
       SSO_AUTH_SERVER_LOGOUT_URL: http://example.com/logout?target=
     ports:
       - 3000:8080
