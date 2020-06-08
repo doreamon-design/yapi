@@ -137,6 +137,10 @@ async function setLoginCookie(ctx, uid, passsalt, email) {
 }
 
 function getPrefix() {
+  if (yapi.WEBCONFIG.sso.root_url) {
+    return yapi.WEBCONFIG.sso.root_url;
+  }
+
   const protocol = process.env.SITE_PROTOCOL || ctx.protocol;
   const host = process.env.SITE_HOST || ctx.host;
   
