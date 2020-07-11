@@ -19,7 +19,7 @@ module.exports = async (ctx, next) => {
     data,
   } = reqParams;
 
-  console.log('reqParams:', reqParams);
+  // console.log('reqParams:', reqParams);
 
   const startAt = Date.now();
 

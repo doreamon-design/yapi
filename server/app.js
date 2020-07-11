@@ -42,7 +42,6 @@ yapi.app = app;
 // app.use(bodyParser({multipart: true}));
 app.use(koaBody({ multipart: true, jsonLimit: '2mb', formLimit: '1mb', textLimit: '1mb' }));
 app.use(mockServer);
-app.use(proxyServer);
 
 async function checkAuthorize(ctx) {
   let token = ctx.cookies.get('_yapi_token');
@@ -286,6 +285,7 @@ async function doreamonOnlySolution(ctx) {
 
     const email = lodash.get(user, 'email');
     const username = lodash.get(user, 'username');
+    const role = lodash.get(user, 'role');
 
     // check user => login or sso
     await loginOrCreate(ctx, email, username, role);
@@ -365,7 +365,7 @@ app.use(async (ctx, next) => {
   return await next();
 });
 
-// withOauth(app);
+app.use(proxyServer);
 
 app.use(router.routes());
 app.use(router.allowedMethods());
