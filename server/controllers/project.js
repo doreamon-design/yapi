@@ -1123,6 +1123,7 @@ class projectController extends baseController {
   async swaggerUrl(ctx) {
     try {
       const { url } = ctx.request.query;
+      // console.log('get swagger jsonurl:', url);
       const { data } = await axios.get(url);
       if (data == null || typeof data !== 'object') {
         throw new Error('返回数据格式不是 JSON');

@@ -31,13 +31,13 @@ const {
   handleParams,
   checkRequestBodyIsRaw,
   handleContentType,
-  crossRequest,
+  // crossRequest,
   checkNameIsExistInArray
 } = require('common/postmanLib.js');
 
 const plugin = require('client/plugin.js');
 
-const createContext = require('common/createContext')
+// const createContext = require('common/createContext')
 
 const HTTP_METHOD = constants.HTTP_METHOD;
 const InputGroup = Input.Group;
@@ -344,11 +344,17 @@ export default class Run extends Component {
 
     try {
       options.taskId = this.props.curUid;
-      result = await crossRequest(options, options.pre_script || this.state.pre_script, options.after_script || this.state.after_script, createContext(
-        this.props.curUid,
-        this.props.projectId,
-        this.props.interfaceId
-      ));
+  
+      // result = await crossRequest(options, options.pre_script || this.state.pre_script, options.after_script || this.state.after_script, createContext(
+      //   this.props.curUid,
+      //   this.props.projectId,
+      //   this.props.interfaceId
+      // ));
+      //
+      const res = await axios.post('/proxy', options);
+      result = res.data;
+
+      // console.log('crossRequest:', options, result);
 
       await plugin.emitHook('after_request', result, {
         type: this.props.type,
@@ -646,16 +652,10 @@ export default class Run extends Component {
 
           <Tooltip
             placement="bottom"
-            title={(() => {
-              if (hasPlugin) {
-                return '发送请求';
-              } else {
-                return '请安装 cross-request 插件';
-              }
-            })()}
+            title="发送请求"
           >
             <Button
-              disabled={!hasPlugin}
+              // disabled={!hasPlugin}
               onClick={this.reqRealInterface}
               type="primary"
               style={{ marginLeft: 10 }}

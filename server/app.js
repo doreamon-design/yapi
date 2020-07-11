@@ -7,6 +7,7 @@ yapi.commons = commons;
 const dbModule = require('./utils/db.js');
 yapi.connect = dbModule.connect();
 const mockServer = require('./middleware/mockServer.js');
+const proxyServer = require('./middleware/proxyServer.js');
 require('./plugin.js');
 const websockify = require('koa-websocket');
 const websocket = require('./websocket.js');
@@ -38,6 +39,7 @@ yapi.app = app;
 // app.use(bodyParser({multipart: true}));
 app.use(koaBody({ multipart: true, jsonLimit: '2mb', formLimit: '1mb', textLimit: '1mb' }));
 app.use(mockServer);
+app.use(proxyServer);
 
 async function checkAuthorize(ctx) {
   let token = ctx.cookies.get('_yapi_token');
