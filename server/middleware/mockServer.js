@@ -1,3 +1,6 @@
+const ratelimit = require('koa-ratelimit');
+const compose = require('koa-compose');
+const LRU = require('@zcorky/lru').lru
 const yapi = require('../yapi.js');
 const projectModel = require('../models/project.js');
 const interfaceModel = require('../models/interface.js');
@@ -141,7 +144,7 @@ function mockValidator(interfaceData, ctx) {
   return { valid: true };
 }
 
-module.exports = async (ctx, next) => {
+async function mockServer(ctx, next) {
   // no used variable 'hostname' & 'config'
   // let hostname = ctx.hostname;
   // let config = yapi.WEBCONFIG;
@@ -384,3 +387,61 @@ module.exports = async (ctx, next) => {
     return (ctx.body = yapi.commons.resReturn(null, 409, e.message));
   }
 };
+
+class LRUMap extends Map {
+  constructor(max) {
+    super();
+
+    this.max = max;
+    this.cache = new LRU(max);
+  }
+
+  get(key) {
+    return this.cache.get(key);
+  }
+
+  set(key, value) {
+    return this.cache.set(key, value);
+  }
+
+  clear() {
+    return this.cache.cache.clear();
+  }
+
+  has(key) {
+    return this.cache.hasKey(key);
+  }
+
+  get size() {
+    return this.cache.size;
+  }
+
+  delete(...args) {
+    return this.cache.cache.delete(...args);
+  }
+}
+
+const ratelimitDb = new LRUMap(1000);
+
+module.exports = compose([
+  ratelimit({
+    driver: 'memory',
+    db: ratelimitDb,
+    max: 100,
+    duration: 60000,
+    id: (ctx) => {
+      console.log('ctx.ip: ', ctx.ip);
+      return ctx.ip;
+    },
+    errorMessage: {
+      code: 4290001,
+      message: 'rate limit execeded',
+    },
+    // headers: {
+    //   remaining: 'Rate-Limit-Remaining',
+    //   reset: 'Rate-Limit-Reset',
+    //   total: 'Rate-Limit-Total'
+    // },
+  }),
+  mockServer,
+]);

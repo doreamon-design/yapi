@@ -181,6 +181,11 @@
   resolved "https://registry.npm.taobao.org/@zcorky/is/download/@zcorky/is-1.0.6.tgz#81eaae678eefed93c5f6820b5a1d46613e45579d"
   integrity sha1-gequZ47v7ZPF9oILWh1GYT5FV50=
 
+"@zcorky/lru@^1.0.3":
+  version "1.0.3"
+  resolved "https://registry.npm.taobao.org/@zcorky/lru/download/@zcorky/lru-1.0.3.tgz#60e73fed9ebbf512c7dc7bac24e5e9104bb1f5a7"
+  integrity sha1-YOc/7Z679RLH3HusJOXpEEux9ac=
+
 "@zcorky/moment@^1.0.11":
   version "1.1.0"
   resolved "https://registry.npm.taobao.org/@zcorky/moment/download/@zcorky/moment-1.1.0.tgz#7125d7bb5fde0b013ac18fb42e6a0b609708a127"
@@ -3900,7 +3905,7 @@ date-time@^2.1.0:
   dependencies:
     time-zone "^1.0.0"
 
-debug@*:
+debug@*, debug@^4.1.1:
   version "4.1.1"
   resolved "https://registry.npm.taobao.org/debug/download/debug-4.1.1.tgz#3b72260255109c6b589cee050f1d516139664791"
   integrity sha1-O3ImAlUQnGtYnO4FDx1RYTlmR5E=
@@ -7986,6 +7991,16 @@ koa-mysql-session@0.0.2:
     co "^3.1.0"
     co-mysql "^0.4.1"
 
+koa-ratelimit@^4.2.1:
+  version "4.2.1"
+  resolved "https://registry.npm.taobao.org/koa-ratelimit/download/koa-ratelimit-4.2.1.tgz#2dfed49d0aa5d83664adb162e82eaeb8fea92132"
+  integrity sha1-Lf7UnQql2DZkrbFi6C6uuP6pITI=
+  dependencies:
+    debug "^4.1.1"
+    lodash.defaults "^4.2.0"
+    ms "^2.1.1"
+    ratelimiter "^3.2.0"
+
 koa-router@^7.0.1:
   version "7.4.0"
   resolved "https://registry.npm.taobao.org/koa-router/download/koa-router-7.4.0.tgz#aee1f7adc02d5cb31d7d67465c9eacc825e8c5e0"
@@ -10882,6 +10897,11 @@ range-parser@~1.0.3:
   version "1.0.3"
   resolved "https://registry.npm.taobao.org/range-parser/download/range-parser-1.0.3.tgz#6872823535c692e2c2a0103826afd82c2e0ff175"
   integrity sha1-aHKCNTXGkuLCoBA4Jq/YLC4P8XU=
+
+ratelimiter@^3.2.0:
+  version "3.4.1"
+  resolved "https://registry.npm.taobao.org/ratelimiter/download/ratelimiter-3.4.1.tgz#fa69e94937413382a926aaa17aaeaa6263af4659"
+  integrity sha1-+mnpSTdBM4KpJqqheq6qYmOvRlk=
 
 raw-body@2.4.0:
   version "2.4.0"

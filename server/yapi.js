@@ -35,9 +35,9 @@ const config = {
   },
   oauth: {
     doreamon: {
-      only: !!process.env.DOREAMON_ONLY || true,
-      client_id: process.env.DOREAMON_CLIENT_ID || '012c441a7ddf140d0fa9a3918ae7fa1b',
-      client_secret: process.env.DOREAMON_CLIENT_SECRET || '089141f414506a4d5c3138b20789af73e2add849',
+      only: !!process.env.DOREAMON_ONLY,
+      client_id: process.env.DOREAMON_CLIENT_ID,
+      client_secret: process.env.DOREAMON_CLIENT_SECRET,
       redirect_uri: `${process.env.ROOT_URL || 'http://127.0.0.1:8080'}/login/doreamon/callback`,
     },
   },
