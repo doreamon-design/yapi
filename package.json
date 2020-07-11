@@ -30,6 +30,8 @@
   "author": "",
   "license": "Apache-2.0",
   "dependencies": {
+    "@koex/passport": "^0.10.2",
+    "@koex/passport-oauth2-config": "^0.10.2",
     "@zcorky/delay": "^1.0.1",
     "@zcorky/moment": "^1.0.11",
     "ajv": "^5.5.1",

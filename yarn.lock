@@ -108,6 +108,25 @@
   dependencies:
     arrify "^1.0.1"
 
+"@koex/passport-oauth2-config@^0.10.2":
+  version "0.10.2"
+  resolved "https://registry.npm.taobao.org/@koex/passport-oauth2-config/download/@koex/passport-oauth2-config-0.10.2.tgz#373346b67dac2ca5482f5cad2e0617fa7db29e23"
+  integrity sha1-NzNGtn2sLKVIL1ytLgYX+n2yniM=
+  dependencies:
+    "@koex/passport" "^0.10.2"
+    "@zcorky/query-string" "^1.0.2"
+    "@zodash/get" "^1.0.15"
+    node-fetch "^2.6.0"
+
+"@koex/passport@^0.10.2":
+  version "0.10.2"
+  resolved "https://registry.npm.taobao.org/@koex/passport/download/@koex/passport-0.10.2.tgz#f94bc8bcf8834f58ed60d33b80f88ab969bd0874"
+  integrity sha1-+UvIvPiDT1jtYNM7gPiKuWm9CHQ=
+  dependencies:
+    "@zcorky/query-string" "^1.0.2"
+    "@zodash/format" "^1.0.1-alpha.13"
+    node-fetch "^2.6.0"
+
 "@kyleshockey/object-assign-deep@^0.4.0":
   version "0.4.2"
   resolved "https://registry.npm.taobao.org/@kyleshockey/object-assign-deep/download/@kyleshockey/object-assign-deep-0.4.2.tgz#84900f0eefc372798f4751b5262830b8208922ec"
@@ -168,6 +187,29 @@
   integrity sha1-cSXXu1/eCwE6wY+0LmoLYJcIoSc=
   dependencies:
     "@zcorky/is" "^1.0.6"
+
+"@zcorky/query-string@^1.0.2":
+  version "1.0.2"
+  resolved "https://registry.npm.taobao.org/@zcorky/query-string/download/@zcorky/query-string-1.0.2.tgz#680eedfe5f01e9a444104caedf54bb6918d4c152"
+  integrity sha1-aA7t/l8B6aREEEyu31S7aRjUwVI=
+
+"@zodash/format@^1.0.1-alpha.13":
+  version "1.0.1-alpha.20"
+  resolved "https://registry.npm.taobao.org/@zodash/format/download/@zodash/format-1.0.1-alpha.20.tgz#b94e73a21aefa6a875b04a12faad778b493e2cac"
+  integrity sha1-uU5zohrvpqh1sEoS+q13i0k+LKw=
+
+"@zodash/get@^1.0.15":
+  version "1.0.22"
+  resolved "https://registry.npm.taobao.org/@zodash/get/download/@zodash/get-1.0.22.tgz#83dd6acae41042886faac86400adb02170a675b6"
+  integrity sha1-g91qyuQQQohvqshkAK2wIXCmdbY=
+  dependencies:
+    "@zcorky/is" "^1.0.6"
+    "@zodash/to-path" "^0.0.8"
+
+"@zodash/to-path@^0.0.8":
+  version "0.0.8"
+  resolved "https://registry.npm.taobao.org/@zodash/to-path/download/@zodash/to-path-0.0.8.tgz#38a36dcc017f729398c238884357a918f7f725e6"
+  integrity sha1-OKNtzAF/cpOYwjiIQ1epGPf3JeY=
 
 abab@^1.0.3:
   version "1.0.4"

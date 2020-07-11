@@ -26,8 +26,11 @@ const delay = require('@zcorky/delay').delay;
 const uuid = require('uuid/v4');
 const moment = require('@zcorky/moment').moment;
 const lodash = require('lodash');
+const qs = require('querystring');
 
 const userModel = require('./models/user.js');
+
+// const withOauth = require('./controllers/oauth');
 
 global.storageCreator = storageCreator;
 let indexFile = process.argv[2] === 'dev' ? 'dev.html' : 'index.html';
@@ -75,7 +78,7 @@ async function checkAuthorize(ctx) {
   }
 }
 
-async function loginOrCreate(ctx, email, username) {
+async function loginOrCreate(ctx, email, username, role) {
   //登录
   console.log('loginOrCreate: ', email, username);
   let userInst = yapi.getInst(userModel); //创建user实体
@@ -95,7 +98,7 @@ async function loginOrCreate(ctx, email, username) {
       password: yapi.commons.generatePassword(password, passsalt), //加密
       email,
       passsalt: passsalt,
-      role: yapi.WEBCONFIG.adminAccount === email ? 'admin' : 'member',
+      role: role === 'admin' ? 'admin' : yapi.WEBCONFIG.adminAccount === email ? 'admin' : 'member',
       add_time: yapi.commons.time(),
       up_time: yapi.commons.time(),
       type: 'site',
@@ -110,6 +113,12 @@ async function loginOrCreate(ctx, email, username) {
     // update admin by email
     if (yapi.WEBCONFIG.adminAccount === email && result.role !== 'admin') {
       console.log(`${moment().format('YYYY-MM-DD HH:mm:ss')} [user][admin] update admin on email: ${email}`);
+      result.role = 'admin';
+      await result.save();
+    }
+
+    if (role === 'admin') {
+      console.log(`${moment().format('YYYY-MM-DD HH:mm:ss')} [user][admin] update admin on role: ${email}`);
       result.role = 'admin';
       await result.save();
     }
@@ -205,6 +214,90 @@ async function ssoOnlySolution(ctx) {
   await ctx.redirect(SSO_AUTH_SERVER_URL);
 }
 
+async function doreamonOnlySolution(ctx) {
+  // ticket && path === login && method === post => login or register
+  const path = ctx.path;
+  const method = ctx.method;
+
+  const target = encodeURIComponent(`${getPrefix(ctx)}/login/doreamon/callback`);
+
+  const {
+    client_id,
+    client_secret,
+    redirect_uri,
+  } = yapi.WEBCONFIG.oauth.doreamon;
+
+  const { code } = ctx.request.query;
+
+  // console.log('x: ', type, ticket, path, method, ctx.query, ctx.request.query);
+  if (code && path === '/login/doreamon/callback' && method === 'GET') {
+    // get doremaon token
+    const tokenRes = await fetch(`https://login.zcorky.com/token`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+        'Accept': 'application/json',
+      },
+      body: qs.stringify({
+        client_id,
+        client_secret,
+        redirect_uri,
+        grant_type: 'authorization_code',
+        code,
+        scope: 'todo',
+        // state: 'todo',
+      }),
+    });
+
+    if (!tokenRes.ok) {
+      console.log('doremon get token failed:', await tokenRes.text());
+
+      await delay(3000);
+      await ctx.throw(500, {
+        code: 5001001,
+        message: 'Unable to get token from doreamon',
+      });
+    }
+
+    const token = await tokenRes.json();
+    // console.log('doreamon token: ', token);
+  
+    const userRes = await fetch('https://login.zcorky.com/user', {
+      method: 'GET',
+      headers: {
+        accept: 'application/json',
+        authorization: `Bearer ${token.access_token}`,
+      },
+    });
+
+    // 
+    if (!userRes.ok) {
+      console.log('doremon get user failed:', await userRes.text());
+
+      await delay(3000);
+      await ctx.throw(500, {
+        code: 5001002,
+        message: 'Unable to get user from doreamon',
+      });
+    }
+
+    const user = await userRes.json();
+    // console.log('doreamon user: ', user);
+
+    const email = lodash.get(user, 'email');
+    const username = lodash.get(user, 'username');
+
+    // check user => login or sso
+    await loginOrCreate(ctx, email, username, role);
+    await ctx.redirect(`/`);
+    return ;
+  }
+
+
+  // not ticket => go sso
+  await ctx.redirect(`https://login.zcorky.com/?client_id=${client_id}&redirect_uri=${encodeURIComponent(redirect_uri)}&response_type=code&state=_`);
+}
+
 app.use(async function accesslog(ctx, next) {
   // static file
   if (ctx.request.path.startsWith('/prd/')) {
@@ -259,14 +352,20 @@ app.use(async (ctx, next) => {
     return await next();
   }
 
-  // sso only false
-  if (!yapi.WEBCONFIG.sso.only) {
-    return await next();
+  // // doreamon only
+  if (yapi.WEBCONFIG.oauth.doreamon.only) {
+    return await doreamonOnlySolution(ctx);
   }
 
   // sso only
-  await ssoOnlySolution(ctx);
+  if (yapi.WEBCONFIG.sso.only) {
+    return await ssoOnlySolution(ctx);
+  }
+
+  return await next();
 });
+
+// withOauth(app);
 
 app.use(router.routes());
 app.use(router.allowedMethods());

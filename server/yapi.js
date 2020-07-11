@@ -33,6 +33,14 @@ const config = {
     user_url: process.env.SSO_AUTH_USER_URL,
     server_logout_url: process.env.SSO_AUTH_SERVER_LOGOUT_URL,
   },
+  oauth: {
+    doreamon: {
+      only: !!process.env.DOREAMON_ONLY,
+      client_id: process.env.DOREAMON_CLIENT_ID,
+      client_secret: process.env.DOREAMON_CLIENT_SECRET,
+      redirect_uri: `${process.env.ROOT_URL || 'http://127.0.0.1:8080'}/login/doreamon/callback`,
+    },
+  },
   user: {
     usernameKey: process.env.USERNAME_KEY || 'username',
     emailKey: process.env.EMAIL_KEY || 'email',
