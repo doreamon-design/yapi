@@ -291,7 +291,7 @@ function createInterMarkdown(basepath, listItem, isToc) {
 function createProjectMarkdown(curProject, wikiData) {
   let mdTemplate = ``;
   // 项目名、项目描述
-  let title = `<h1 class="curproject-name"> ${curProject.name} </h1>`;
+  let title = `<h1 class="curproject-name"> 项目: ${curProject.name} </h1>`;
 
   mdTemplate += `\n ${title} \n ${curProject.desc || ''}\n\n`;
 

@@ -177,9 +177,6 @@ class exportController extends baseController {
           ${left}
           <div id="right" class="content-right">
           ${tp}
-            <footer class="m-footer">
-              <p>Build by <a href="https://ymfe.org/">YMFE</a>.</p>
-            </footer>
           </div>
         </div>
       </body>

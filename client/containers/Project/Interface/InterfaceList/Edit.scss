@@ -16,6 +16,10 @@
 
   .interface-edit-json-info{
     margin-bottom: 5px;
+
+    i.anticon > svg {
+      display: none;
+    }
   }
 
   .interface-edit-item.hide {
