@@ -354,11 +354,37 @@ app.use(async (ctx, next) => {
 
   // // doreamon only
   if (yapi.WEBCONFIG.oauth.doreamon.only) {
+    if (ctx.path === '/login') {
+      return ctx.redirect('/');
+    }
+
+    if (['/api/user/reg', '/api/user/login'].some(e => e === ctx.path)) {
+      ctx.status = 404;
+      ctx.body = {
+        code: 4041010,
+        message: 'resource not found'
+      };
+      return ;
+    }
+
     return await doreamonOnlySolution(ctx);
   }
 
   // sso only
   if (yapi.WEBCONFIG.sso.only) {
+    if (ctx.path === '/login') {
+      return ctx.redirect('/');
+    }
+
+    if (['/api/user/reg', '/api/user/login'].some(e => e === ctx.path)) {
+      ctx.status = 404;
+      ctx.body = {
+        code: 4041010,
+        message: 'resource not found'
+      };
+      return ;
+    }
+
     return await ssoOnlySolution(ctx);
   }
 
