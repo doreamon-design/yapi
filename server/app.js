@@ -351,6 +351,19 @@ app.use(async (ctx, next) => {
   // check is authorized
   const authorized = await checkAuthorize(ctx);
   if (authorized) {
+    if (ctx.path === '/login') {
+      return ctx.redirect('/');
+    }
+
+    if (['/api/user/reg', '/api/user/login'].some(e => e === ctx.path)) {
+      ctx.status = 404;
+      ctx.body = {
+        code: 4041010,
+        message: 'resource not found'
+      };
+      return ;
+    }
+
     return await next();
   }
 
