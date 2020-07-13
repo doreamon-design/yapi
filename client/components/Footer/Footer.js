@@ -108,7 +108,7 @@ Footer.defaultProps = {
         },
         {
           itemTitle: '使用文档',
-          itemLink: 'https://hellosean1025.github.io/yapi/'
+          itemLink: '/doc/index.html/'
         }
       ]
     }

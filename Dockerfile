@@ -15,6 +15,8 @@ COPY . .
 
 RUN  yarn run build-client
 
+RUN  yarn run docs
+
 # Server
 
 FROM node:12.16-alpine

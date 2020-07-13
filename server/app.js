@@ -340,6 +340,8 @@ app.use(async function responseTime(ctx, next) {
   ctx.set('X-Response-Time', `${delta}ms`);
 });
 
+// doc
+
 app.use(async (ctx, next) => {
   // static file
   if (ctx.request.path.startsWith('/prd/')) {

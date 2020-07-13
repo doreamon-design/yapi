@@ -1,7 +1,7 @@
 ## YApi  可视化接口管理平台
 
 文档：
-<p><a target="_blank" href="https://hellosean1025.github.io/yapi">hellosean1025.github.io/yapi</a></p>
+<p><a target="_blank" href="/doc/index.html">hellosean1025.github.io/yapi</a></p>
 
 ### 平台介绍
 ![avatar](yapi-base-flow.jpg)
