@@ -351,8 +351,37 @@ export default class Run extends Component {
       //   this.props.interfaceId
       // ));
       //
-      const res = await axios.post('/proxy', options);
-      result = res.data;
+
+      const url = new URL(options.url);
+      if (['127.0.0.1', 'localhost'].some(e => e === url.hostname)) {
+        const startAt = new Date();
+
+        const res = await axios({
+          method: options.method,
+          url: options.url,
+          headers: options.headers,
+          data: options.data,
+          timeout: 300000,
+        });
+
+        const runTime = new Date() - startAt;
+
+        result = {
+          req: options,
+          res: {
+            ...res,
+            body: res.data,
+            header: res.headers,
+            status: res.status,
+            statusText: res.statusText,
+          },
+          runTime,
+        };
+        
+      } else {
+        const res = await axios.post('/proxy', options);
+        result = res.data;
+      }
 
       // console.log('crossRequest:', options, result);
 
