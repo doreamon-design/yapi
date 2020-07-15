@@ -361,7 +361,7 @@ export default class Run extends Component {
           url: options.url,
           headers: options.headers,
           data: options.data,
-          timeout: 300000,
+          timeout: 300000
         });
 
         const runTime = new Date() - startAt;
@@ -373,11 +373,11 @@ export default class Run extends Component {
             body: res.data,
             header: res.headers,
             status: res.status,
-            statusText: res.statusText,
+            statusText: res.statusText
           },
-          runTime,
+          runTime
         };
-        
+
       } else {
         const res = await axios.post('/proxy', options);
         result = res.data;
