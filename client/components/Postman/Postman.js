@@ -514,7 +514,10 @@ export default class Run extends Component {
     if (key === 'value') {
       bodyForm[index].enable = !!v;
       if (bodyForm[index].type === 'file') {
-        bodyForm[index].value = 'file_' + index;
+        const id = 'file_' + index;
+        bodyForm[index].value = id;
+        const file = document.querySelector(`#${id}`).files[0];
+        bodyForm[index].filename = file.name;
       } else {
         bodyForm[index].value = v;
       }
@@ -638,6 +641,17 @@ export default class Run extends Component {
     this.setState({
       envModalVisible: false
     });
+  };
+
+  handleSelectFile = (index) => {
+    return () => {
+      document.querySelector(`#file_${index}`).click();
+    };
+  }
+
+  getFileName = (index) => {
+    const one = this.state.req_body_form.find(e => e.type === 'file' && e.value === 'file_' + index);
+    return one && one.filename;
   };
 
   render() {
@@ -939,13 +953,30 @@ export default class Run extends Component {
                         )}
                         <span className="eq-symbol">=</span>
                         {item.type === 'file' ? (
-                          <Input
-                            type="file"
-                            id={'file_' + index}
-                            onChange={e => this.changeBody(e.target.value, index, 'value')}
-                            // multiple
-                            className="value"
-                          />
+                          <span style={{ position: 'relative', cursor: 'pointer' }}>
+                            <Input
+                              type="file"
+                              id={'file_' + index}
+                              onChange={e => this.changeBody(e.target.value, index, 'value')}
+                              // multiple
+                              className="value"
+                              style={{
+                                // position: 'absolute',
+                                // top: 0,
+                                // left: 0,
+                                // width: '100%',
+                                // height: '100%',
+                                // opacity: 0,
+                                // zIndex: 10,
+                                // cursor: 'pointer',
+                                // overflow: 'hidden'
+                                display: 'none'
+                              }}
+                            />
+                            <Button icon="upload" onClick={this.handleSelectFile(index)}>
+                              {this.getFileName(index) || '上传文件'}
+                            </Button>
+                          </span>
                         ) : (
                           <Input
                             value={item.value}
