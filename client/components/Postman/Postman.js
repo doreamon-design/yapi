@@ -343,9 +343,10 @@ export default class Run extends Component {
       interfaceId: this.props.interfaceId
     });
 
+    let form;
     // form-data
     if (options.headers['Content-Type'] && options.headers['Content-Type'].indexOf('multipart/form-data') !== -1) {
-      const form = new FormData();
+      form = new FormData();
       // body
       Object.keys(options.data || {}).forEach(key => {
         form.append(key, options.data[key]);
@@ -405,8 +406,17 @@ export default class Run extends Component {
         };
 
       } else {
-        const res = await axios.post('/proxy', options);
-        result = res.data;
+        if (options.headers['Content-Type'] && options.headers['Content-Type'].indexOf('multipart/form-data') !== -1) {
+          form.append('method', options.method);
+          form.append('url', options.url);
+          form.append('headers', JSON.stringify(options.headers));
+
+          const res = await axios.post('/proxy', form);
+          result = res.data;
+        } else {
+          const res = await axios.post('/proxy', options);
+          result = res.data;
+        }
       }
 
       // console.log('crossRequest:', options, result);
@@ -511,7 +521,7 @@ export default class Run extends Component {
     } else if (key === 'enable') {
       bodyForm[index].enable = v;
     }
-    
+
     // console.log('changeBody: ', v, index, key, bodyForm);
     this.setState({ req_body_form: bodyForm });
   };
