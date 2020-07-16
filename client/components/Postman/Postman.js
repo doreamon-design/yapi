@@ -327,6 +327,7 @@ export default class Run extends Component {
       });
       return null;
     }
+  
     this.setState({
       loading: true
     });
@@ -341,6 +342,31 @@ export default class Run extends Component {
       projectId: this.props.projectId,
       interfaceId: this.props.interfaceId
     });
+
+    // form-data
+    if (options.headers['Content-Type'] && options.headers['Content-Type'].indexOf('multipart/form-data') !== -1) {
+      const form = new FormData();
+      // body
+      Object.keys(options.data || {}).forEach(key => {
+        form.append(key, options.data[key]);
+      });
+      // file
+      Object.keys(options.files || {}).forEach(key => {
+        const node = document.querySelector('#' + options.files[key]);
+        // console.log('node: ', '#' + options.files[key], node, );
+        const file = node.files[0];
+        form.append(key, file);
+      });
+      
+      // change options.data
+      options.data = form;
+      // options.headers = {
+      //   ...options.headers,
+      //   ...form.getHeaders(),
+      // };
+    }
+
+    // console.log('reqRealInterface: ', options);
 
     try {
       options.taskId = this.props.curUid;
@@ -485,6 +511,8 @@ export default class Run extends Component {
     } else if (key === 'enable') {
       bodyForm[index].enable = v;
     }
+    
+    // console.log('changeBody: ', v, index, key, bodyForm);
     this.setState({ req_body_form: bodyForm });
   };
 
@@ -901,14 +929,13 @@ export default class Run extends Component {
                         )}
                         <span className="eq-symbol">=</span>
                         {item.type === 'file' ? (
-                          '因Chrome最新版安全策略限制，不再支持文件上传'
-                          // <Input
-                          //   type="file"
-                          //   id={'file_' + index}
-                          //   onChange={e => this.changeBody(e.target.value, index, 'value')}
-                          //   multiple
-                          //   className="value"
-                          // />
+                          <Input
+                            type="file"
+                            id={'file_' + index}
+                            onChange={e => this.changeBody(e.target.value, index, 'value')}
+                            // multiple
+                            className="value"
+                          />
                         ) : (
                           <Input
                             value={item.value}
