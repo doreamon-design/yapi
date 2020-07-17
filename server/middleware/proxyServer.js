@@ -70,13 +70,17 @@ module.exports = async (ctx, next) => {
 
   let aRes;
 
-  aRes = await axios({
-    method,
-    url,
-    headers,
-    data,
-    timeout: 10000,
-  });
+  try {
+    aRes = await axios({
+      method,
+      url,
+      headers,
+      data,
+      timeout: 10000,
+    });
+  } catch (error) {
+    aRes = error.response;
+  }
 
 
   // const aRes = await axios.get(url);
