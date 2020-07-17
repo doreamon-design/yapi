@@ -1052,9 +1052,9 @@ export default class Run extends Component {
               >
                 {this.state.resStatusCode + '  ' + this.state.resStatusText}
               </h2>
-              <div>
+              {/* <div>
                 <a rel="noopener noreferrer"  target="_blank" href="https://juejin.im/post/5c888a3e5188257dee0322af">YApi 新版如何查看 http 请求数据</a>
-              </div>
+              </div> */}
               {this.state.test_valid_msg && (
                 <Alert
                   message={
