@@ -14,7 +14,8 @@ import {
   Switch,
   Row,
   Col,
-  Alert
+  Alert,
+  message
 } from 'antd';
 import constants from '../../constants/variable.js';
 import AceEditor from 'client/components/AceEditor/AceEditor';
@@ -355,8 +356,23 @@ export default class Run extends Component {
       Object.keys(options.files || {}).forEach(key => {
         const node = document.querySelector('#' + options.files[key]);
         // console.log('node: ', '#' + options.files[key], node, );
-        const file = node.files[0];
-        form.append(key, file);
+        const file = node && node.files && node.files[0];
+        if (file) {
+          form.append(key, file);
+        } else {
+          console.log(options, this.state);
+          const name = key;
+          const { req_body_form } = this.state;
+          const isRequired = req_body_form
+            && req_body_form.some
+            && req_body_form.some(e => e.name === name && e.required === '1');
+          if (isRequired) {
+            message.error(`文件 (${name}) 是必须的`);
+
+            this.setState({ loading: false });
+            return null;
+          }
+        }
       });
       
       // change options.data
