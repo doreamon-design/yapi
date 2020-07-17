@@ -399,13 +399,19 @@ export default class Run extends Component {
       if (['127.0.0.1', 'localhost'].some(e => e === url.hostname)) {
         const startAt = new Date();
 
-        const res = await axios({
-          method: options.method,
-          url: options.url,
-          headers: options.headers,
-          data: options.data,
-          timeout: 300000
-        });
+        console.log('start...', options);
+        let res;
+        try {
+          res = await axios({
+            method: options.method,
+            url: options.url,
+            headers: options.headers,
+            data: options.data,
+            timeout: 300000
+          });
+        } catch (error) {
+          res = error.response;
+        }
 
         const runTime = new Date() - startAt;
 
