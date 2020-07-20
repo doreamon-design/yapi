@@ -178,7 +178,9 @@ async function ssoOnlySolution(ctx) {
   // console.log('x: ', type, ticket, path, method, ctx.query, ctx.request.query);
   if (token && path === '/login/sso/callback' && method === 'GET') {
     // get sso user
-    const res = await fetch(SSO_AUTH_USER_URL);
+    const res = await fetch(SSO_AUTH_USER_URL, {
+      timeout: 10000, // 10s
+    });
 
     if (res.status !== 200) {
       console.log('sso get user failed.');
@@ -251,6 +253,7 @@ async function doreamonOnlySolution(ctx) {
         scope: 'todo',
         // state: 'todo',
       }),
+      timeout: 10000, // 10s
     });
 
     if (!tokenRes.ok) {
@@ -272,6 +275,7 @@ async function doreamonOnlySolution(ctx) {
         accept: 'application/json',
         authorization: `Bearer ${token.access_token}`,
       },
+      timeout: 10000, // 10s
     });
 
     // 
