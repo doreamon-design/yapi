@@ -17,6 +17,7 @@ import {
   Alert,
   message
 } from 'antd';
+import qs from 'querystring';
 import constants from '../../constants/variable.js';
 import AceEditor from 'client/components/AceEditor/AceEditor';
 import _ from 'underscore';
@@ -44,6 +45,14 @@ const HTTP_METHOD = constants.HTTP_METHOD;
 const InputGroup = Input.Group;
 const Option = Select.Option;
 const Panel = Collapse.Panel;
+
+const isFormData = (headers) => {
+  return headers && headers['Content-Type'] && headers['Content-Type'].indexOf('multipart/form-data') !== -1;
+}
+
+const isXWWWFormUrlencoded = (headers) => {
+  return headers && headers['Content-Type'] && headers['Content-Type'].indexOf('application/x-www-form-urlencoded') !== -1;
+}
 
 export const InsertCodeMap = [
   {
@@ -346,12 +355,14 @@ export default class Run extends Component {
 
     let form;
     // form-data
-    if (options.headers['Content-Type'] && options.headers['Content-Type'].indexOf('multipart/form-data') !== -1) {
+    // if (options.headers['Content-Type'] && options.headers['Content-Type'].indexOf('multipart/form-data') !== -1) {
+    if (isFormData(options.headers)) {
       form = new FormData();
       // body
       Object.keys(options.data || {}).forEach(key => {
         form.append(key, options.data[key]);
       });
+
       // file
       Object.keys(options.files || {}).forEach(key => {
         const node = document.querySelector('#' + options.files[key]);
@@ -381,6 +392,8 @@ export default class Run extends Component {
       //   ...options.headers,
       //   ...form.getHeaders(),
       // };
+    } else if (isXWWWFormUrlencoded(options.headers)) {
+      options.data = qs.stringify(options.data);
     }
 
     // console.log('reqRealInterface: ', options);
@@ -399,8 +412,20 @@ export default class Run extends Component {
       if (['127.0.0.1', 'localhost'].some(e => e === url.hostname)) {
         const startAt = new Date();
 
+        /* eslint-disable */
+        // debugger
         console.log('start...', options);
         let res;
+
+        // window.axios = axios;
+        // window.options = {
+        //   method: options.method,
+        //   url: options.url,
+        //   headers: options.headers,
+        //   data: options.data,
+        //   timeout: 300000
+        // };
+        
         try {
           res = await axios({
             method: options.method,
