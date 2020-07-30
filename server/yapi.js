@@ -47,13 +47,17 @@ const config = {
   },
   mail: {
     enable: !!process.env.MAIL_ENABLE,
-    host: process.env.MAIL_HOST, // "smtp.163.com",    //邮箱服务器
-    port: process.env.MAIL_PORT, // 465,               //端口
-    from: process.env.MAIL_FROM, // "***@163.com",     //发送人邮箱
+    host: process.env.MAIL_HOST, // "smtp.163.com",    // 邮箱服务器
+    port: +process.env.MAIL_PORT || 465, // 465,               // 端口
+    // 注意 from 和 auth.user 必须是同一个账号, 有点怪异，貌似是 QQ 邮箱的问题
+    //  issue: Mail command failed: 501 mail from address must be same as authorization user
+    from: process.env.MAIL_FROM, // "***@163.com",     // 发送人邮箱 
     auth: {
-        user: process.env.MAIL_USER, // "***@163.com", //邮箱服务器账号
-        pass: process.env.MAIL_PASS, // "*****"        //邮箱服务器密码
-    }
+        user: process.env.MAIL_USER, // "***@163.com", // 邮箱服务器账号
+        pass: process.env.MAIL_PASS, // "*****"        // 邮箱服务器密码
+    },
+    secureConnection: true,
+    use_authentication: true,
   }
 };
 
