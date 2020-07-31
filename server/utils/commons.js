@@ -13,8 +13,9 @@ const json5 = require('json5');
 const _ = require('underscore');
 const Ajv = require('ajv');
 const Mock = require('mockjs');
-
-
+const fetch = require('node-fetch');
+const renderTemplate = require('@zodash/format').format;
+const getTemplateValue = require('@zodash/get').get;
 
 const ejs = require('easy-json-schema');
 
@@ -206,6 +207,63 @@ exports.sendMail = (options, cb) => {
     console.error(e.message); // eslint-disable-line
   }
 };
+
+exports.sendWebhook = (options, cb) => {
+  if (!yapi.webhook || !yapi.webhook.enable) return false;
+  options.subject = options.subject ? options.subject + '-API DOCS 平台' : 'API DOCS 平台';
+
+  cb =
+    cb ||
+    function (err) {
+      if (err) {
+        yapi.commons.log('send webhook ' + options.to + ' response: ' + err.message, 'error');
+      } else {
+        yapi.commons.log('send webhook ' + options.to + ' success');
+      }
+    };
+
+  try {
+    options.to.forEach(t => {
+      const data = renderTemplate(
+        t.template,
+        (key) => {
+          return getTemplateValue(options.metadata, key, '-');
+        },
+        {
+        start: '{{',
+        end: '}}',
+        });
+
+      console.log('webhook template data: ', JSON.parse(data));
+
+      return fetch(t.url,  {
+        method: t.method,
+        headers: {
+          'Content-Type': t.contentType,
+        },
+        data: t.contentType.indexOf('application/x-www-form-urlencoded') !== -1
+          ? qs.stringify(data)
+          : JSON.stringify(data),
+      })
+      .then(async (res) => {
+        if (!res.ok) {
+          throw new Error(`status(${res.status}) text("${await res.text()}")`); 
+        }
+      })
+      .catch(e => {
+        cb(e);
+
+        // yapi.commons.log(e.message, 'error');
+        // console.error(e.message); // eslint-disable-line
+      });
+    })
+  } catch (e) {
+    cb(e);
+
+    yapi.commons.log(e.message, 'error');
+    console.error(e.message); // eslint-disable-line
+  }
+}
 
 exports.validateSearchKeyword = keyword => {
   if (/^\*|\?|\+|\$|\^|\\|\.$/.test(keyword)) {

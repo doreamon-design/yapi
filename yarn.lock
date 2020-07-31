@@ -203,13 +203,25 @@
   resolved "https://registry.npm.taobao.org/@zodash/format/download/@zodash/format-1.0.1-alpha.20.tgz#b94e73a21aefa6a875b04a12faad778b493e2cac"
   integrity sha1-uU5zohrvpqh1sEoS+q13i0k+LKw=
 
-"@zodash/get@^1.0.15":
+"@zodash/format@^1.1.1":
+  version "1.1.1"
+  resolved "https://registry.npm.taobao.org/@zodash/format/download/@zodash/format-1.1.1.tgz#f5c6117ecb9f2f64fc9c92808d63f6dd64a3c512"
+  integrity sha1-9cYRfsufL2T8nJKAjWP23WSjxRI=
+
+"@zodash/get@^1.0.15", "@zodash/get@^1.0.22":
   version "1.0.22"
   resolved "https://registry.npm.taobao.org/@zodash/get/download/@zodash/get-1.0.22.tgz#83dd6acae41042886faac86400adb02170a675b6"
   integrity sha1-g91qyuQQQohvqshkAK2wIXCmdbY=
   dependencies:
     "@zcorky/is" "^1.0.6"
     "@zodash/to-path" "^0.0.8"
+
+"@zodash/template@^0.1.0":
+  version "0.1.0"
+  resolved "https://registry.npm.taobao.org/@zodash/template/download/@zodash/template-0.1.0.tgz#72c150f5853e4654c212ad007b0c034342f9f2a7"
+  integrity sha1-csFQ9YU+RlTCEq0AewwDQ0L58qc=
+  dependencies:
+    "@zodash/format" "^1.1.1"
 
 "@zodash/to-path@^0.0.8":
   version "0.0.8"

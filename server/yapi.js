@@ -58,7 +58,10 @@ const config = {
     },
     secureConnection: true,
     use_authentication: true,
-  }
+  },
+  webhook: {
+    enable: !!process.env.WEBHOOK_ENABLE,
+  },
 };
 
 let insts = new Map();
