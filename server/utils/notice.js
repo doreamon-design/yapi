@@ -58,7 +58,7 @@ yapi.commons.sendNotice = async function(projectId, data, metadata) {
   const usersInfo = await userInst.findByUids(users);
   const emails = usersInfo.map(item => item.email).join(',');
 
-  const webhooks = await webhookInst.get(projectId);
+  const webhooks = await webhookInst.getByProjectId(projectId);
 
   // console.log('project webhooks: ', projectId, webhooks);
 
