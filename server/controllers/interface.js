@@ -759,50 +759,52 @@ class interfaceController extends baseController {
         interfaceData.project_id
       }/interface/api/${id}`;
 
-      yapi.commons.sendNotice(
-        interfaceData.project_id,
-        {
-          title: `${username} 更新了接口`,
-          content: `<html>
-          <head>
-          <style>
-          ${annotatedCss}
-          ${htmlCss}
-          </style>
-          </head>
-          <body>
-          <div><h3>${username}更新了接口(${data.title})</h3>
-          <p>项目名：${project.name} </p>
-          <p>修改用户: ${username}</p>
-          <p>接口名: <a href="${interfaceUrl}">${data.title}</a></p>
-          <p>接口路径: [${data.method}]${data.path}</p>
-          <p>详细改动日志: ${this.diffHTML(diffView)}</p></div>
-          </body>
-          </html>`
-        },
-        {
-          title: `${username} 更新了接口 ${data.title} (项目名：${project.name})`,
-          content: `修改用户: ${username}
-项目名：${project.name}
-接口路径: [${data.method}] ${data.path}
-详细改动日志: ${this.diffHTML(diffView)}`,
-          modifier: {
-            name: username,
+      if (diffView && diffView.length !== 0) {
+        yapi.commons.sendNotice(
+          interfaceData.project_id,
+          {
+            title: `${username} 更新了接口`,
+            content: `<html>
+            <head>
+            <style>
+            ${annotatedCss}
+            ${htmlCss}
+            </style>
+            </head>
+            <body>
+            <div><h3>${username}更新了接口(${data.title})</h3>
+            <p>项目名：${project.name} </p>
+            <p>修改用户: ${username}</p>
+            <p>接口名: <a href="${interfaceUrl}">${data.title}</a></p>
+            <p>接口路径: [${data.method}]${data.path}</p>
+            <p>详细改动日志: ${this.diffHTML(diffView)}</p></div>
+            </body>
+            </html>`
           },
-          project: {
-            name: project.name,
+          {
+            title: `${username} 更新了接口 ${data.title} (项目名：${project.name})`,
+            content: `修改用户: ${username}
+  项目名：${project.name}
+  接口路径: [${data.method}] ${data.path}
+  详细改动日志: ${this.diffHTML(diffView)}`,
+            modifier: {
+              name: username,
+            },
+            project: {
+              name: project.name,
+            },
+            api: {
+              name: data.title,
+              method: data.method,
+              path: data.path,
+              docUrl: interfaceUrl
+            },
+            diff: {
+              html: this.diffHTML(diffView),
+            },
           },
-          api: {
-            name: data.title,
-            method: data.method,
-            path: data.path,
-            docUrl: interfaceUrl
-          },
-          diff: {
-            html: this.diffHTML(diffView),
-          },
-        },
-      );
+        );
+      }
     }
 
     yapi.emitHook('interface_update', id).then();
