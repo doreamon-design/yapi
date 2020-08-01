@@ -132,6 +132,7 @@ class webhookModel extends baseModel {
     if (doc) {
       doc.active = true;
       doc.error = '';
+      doc.updatedAt = yapi.commons.time();
       return doc.save();
     }
   }
