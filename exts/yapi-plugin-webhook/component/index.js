@@ -1,7 +1,8 @@
 /* eslint-disable */
 import React, { useState, useCallback, useEffect } from 'react';
 import Highlight from 'react-highlight';
-import moment from '@zcorky/moment';
+// import moment from '@zcorky/moment';
+import moment from 'moment';
 
 import Create from './components/create';
 import Update from './components/update';
