@@ -20,8 +20,16 @@
   }
 
   .expand-row {
-    table > tr > td {
+    table tr > td {
       padding-bottom: 16px;
+      position: relative;
+
+      // code
+      pre {
+        overflow-x: auto;
+        white-space: pre-wrap;
+        word-wrap: break-word;
+      }
     }
   }
 

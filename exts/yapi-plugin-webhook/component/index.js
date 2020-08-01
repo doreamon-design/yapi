@@ -11,7 +11,9 @@ import {
   Table,
   Button,
   Modal,
-  message
+  message,
+  Icon,
+  Tooltip,
 } from 'antd';
 
 import axios from 'axios';
@@ -26,6 +28,14 @@ import axios from 'axios';
 //     template: JSON.stringify({ "title": "{{title}}", "content": "{{content}}" }, null, 2)
 //   }
 // ];
+
+const prettyJSON = (str) => {
+  try {
+    return JSON.stringify(JSON.parse(str), null, 2);
+  } catch (err) {
+    return str;
+  }
+}
 
 const api = {
   async list(projectId) {
@@ -74,7 +84,37 @@ export default function Webhook({ projectId }) {
     {
       dataIndex: 'name',
       key: 'name',
-      title: 'Webhook'
+      title: 'Webhook',
+      width: 300,
+      render(text, record) {
+        if (record.active) {
+          return (
+            <div>
+              <Icon
+                style={{
+                  color: 'green',
+                  marginRight: 6
+                }}
+                type={'check-circle'}
+              />
+              <span>{text}</span>
+            </div>
+          );
+        }
+
+        return (
+          <Tooltip title={record.error}>
+            <Icon
+              style={{
+                color: 'red',
+                marginRight: 6
+              }}
+              type={'close-circle'}
+            />
+            <span>{text}</span>
+          </Tooltip>
+        );
+      }
     },
     {
       dataIndex: 'url',
@@ -291,9 +331,16 @@ export default function Webhook({ projectId }) {
             </tr>
             <tr>
               <td>
-                <Highlight>{record.template}</Highlight>
+                <Highlight>{prettyJSON(record.template)}</Highlight>
               </td>
             </tr>
+            {record.error && (
+              <tr>
+                <td>
+                  <Highlight>{prettyJSON(record.error)}</Highlight>
+                </td>
+              </tr>
+            )}
           </tbody>
         </table>
       </div>
