@@ -1,0 +1,7 @@
+{
+  "name": "飞书机器人",
+  "method": "POST",
+  "contentType": "application/json",
+  "url": "https://open.feishu.cn/open-apis/bot/hook/XXX",
+  "template": "{\n \"title\": \"{{title}}\",\n \"text\": \"{{content}}\"\n}"
+}
