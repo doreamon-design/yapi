@@ -1,8 +1,9 @@
 /* eslint-disable */
 
 import React, { useState, useCallback } from 'react';
-
 import { Modal, Form, Input, Icon, Select, Button } from 'antd';
+
+import TemplateLabel from './templateLabel';
 
 const FormItem = Form.Item;
 const TextArea = Input.TextArea;
@@ -34,12 +35,7 @@ const UpdateForm = (props) => {
     }
   }, [props]);
 
-  const templateLabel = (
-    <div className="webhook-template-label">
-      <span>模板消息</span>
-      （<a onClick={onFormat}>格式化</a>）
-    </div>
-  );
+  const templateLabel = <TemplateLabel onFormat={onFormat} />;
 
   const _onSumbit = useCallback(() => {
     form.validateFieldsAndScroll((err, values) => {

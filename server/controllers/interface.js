@@ -802,6 +802,7 @@ class interfaceController extends baseController {
               onlineUrl: interfaceUrl,
             },
             diff: {
+              diffs: diffView,
               html: this.diffHTML(diffView),
             },
           },
