@@ -784,9 +784,10 @@ class interfaceController extends baseController {
           {
             title: `${username} 更新了接口 ${data.title} (项目名：${project.name})`,
             content: `修改用户: ${username}
-  项目名：${project.name}
-  接口路径: [${data.method}] ${data.path}
-  详细改动日志: ${this.diffHTML(diffView)}`,
+项目名：${project.name}
+接口路径: [${data.method}] ${data.path}
+详细改动日志: ${this.diffHTML(diffView)}
+在线地址: ${interfaceUrl}`,
             modifier: {
               name: username,
             },
