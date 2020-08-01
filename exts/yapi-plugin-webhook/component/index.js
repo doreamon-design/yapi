@@ -1,6 +1,7 @@
 /* eslint-disable */
 import React, { useState, useCallback, useEffect } from 'react';
 import Highlight from 'react-highlight';
+import moment from '@zcorky/moment';
 
 import Create from './components/create';
 import Update from './components/update';
@@ -85,7 +86,7 @@ export default function Webhook({ projectId }) {
       dataIndex: 'name',
       key: 'name',
       title: 'Webhook',
-      width: 300,
+      width: 200,
       render(text, record) {
         if (record.active) {
           return (
@@ -119,7 +120,17 @@ export default function Webhook({ projectId }) {
     {
       dataIndex: 'url',
       key: 'url',
-      title: 'URL'
+      title: 'URL',
+      ellipsis: true,
+    },
+    {
+      dataIndex: 'updatedAt',
+      key: 'updatedAt',
+      title: '更新时间',
+      width: 150,
+      render(value) {
+        return moment(value * 1000).format('YYYY-MM-DD HH:mm:ss');
+      },
     },
     {
       dataIndex: 'actions',
@@ -207,7 +218,13 @@ export default function Webhook({ projectId }) {
     api.test(projectId, record)
       .then(() => {
         message.success('测试 Webhook 成功');
-
+      })
+      .catch((error) => {
+        const response = error.response;
+        const message =  response.data.errmsg || '测试 Webhook 失败';
+        message.error(message, 5);
+      })
+      .finally(() => {
         setLoading(true);
 
         api.list(projectId)
@@ -222,11 +239,6 @@ export default function Webhook({ projectId }) {
           .finally(() => {
             setLoading(false);
           });
-      })
-      .catch((error) => {
-        const response = error.response;
-        const message =  response.data.errmsg || '测试 Webhook 失败';
-        message.error(message, 5);
       });
   }, [dataSource, visible]);
 
@@ -346,12 +358,14 @@ export default function Webhook({ projectId }) {
             </tr>
             <tr>
               <td>
+                <div>模板消息</div>
                 <Highlight>{prettyJSON(record.template)}</Highlight>
               </td>
             </tr>
             {record.error && (
               <tr>
                 <td>
+                  <div>错误消息</div>
                   <Highlight>{prettyJSON(record.error)}</Highlight>
                 </td>
               </tr>

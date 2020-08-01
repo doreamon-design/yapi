@@ -186,7 +186,7 @@
   resolved "https://registry.npm.taobao.org/@zcorky/lru/download/@zcorky/lru-1.0.3.tgz#60e73fed9ebbf512c7dc7bac24e5e9104bb1f5a7"
   integrity sha1-YOc/7Z679RLH3HusJOXpEEux9ac=
 
-"@zcorky/moment@^1.0.11":
+"@zcorky/moment@^1.1.0":
   version "1.1.0"
   resolved "https://registry.npm.taobao.org/@zcorky/moment/download/@zcorky/moment-1.1.0.tgz#7125d7bb5fde0b013ac18fb42e6a0b609708a127"
   integrity sha1-cSXXu1/eCwE6wY+0LmoLYJcIoSc=
