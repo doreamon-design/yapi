@@ -275,17 +275,17 @@ exports.sendWebhook = async (options) => {
           try {
             data = JSON.parse(text);
           } catch (err) {
-            console.log('error: ', err.message);
+            console.log('parse json error: ', text);
 
-            // 未知
-            const error = new Error('未知错误: ' + text);
-            error.webhook = t;
-            error.responseText = '未知错误: ' + text;
-            throw error;
+            // // 未知
+            // const error = new Error('未知错误: ' + text);
+            // error.webhook = t;
+            // error.responseText = '未知错误: ' + text;
+            // throw error;
           }
 
           // 飞书: { error, ok }
-          if ('ok' in data && !data.ok) {
+          if (typeof data === 'object' && 'ok' in data && !data.ok) {
             const error = new Error(`测试 Webhook 失败: \n${text}`);
             error.webhook = t;
             error.responseText = text;
@@ -293,12 +293,15 @@ exports.sendWebhook = async (options) => {
           }
 
           // 企业微信: { errcode, errmsg }
-          if ('errcode' in data && data.errcode !== 0) {
+          if (typeof data === 'object' && 'errcode' in data && data.errcode !== 0) {
             const error = new Error(`测试 Webhook 失败: \n${text}`);
             error.webhook = t;
             error.responseText = text;
             throw error;
           }
+
+          // Slack: ok (Incomming Webhooks App)
+          // text === ok
         });
     });
 
