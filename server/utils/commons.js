@@ -267,16 +267,28 @@ exports.sendWebhook = async (options) => {
         })
         .then(async (res) => {
           const text = await res.text();
+          let data;
 
           if (!res.ok) {
             throw new Error(`status(${res.status}) text("${text}")`); 
           }
 
-          // 飞书 { error, ok }
-          const data = JSON.parse(text);
-          console.log('飞书: ', data, data.ok, data.error);
-          if (!data.ok) {
-            throw new Error(`测试 Webhook 失败(飞书): \n${text}`);
+          try {
+            data = JSON.parse(text);
+          } catch (error) {
+            console.log('error: ', error.message);
+            // 未知
+            throw new Error('未知错误: ' + text);
+          }
+
+          // 飞书: { error, ok }
+          if ('ok' in data && !data.ok) {
+            throw new Error(`测试 Webhook 失败: \n${text}`);
+          }
+
+          // 企业微信: { errcode, errmsg }
+          if ('errcode' in data && data.errcode !== 0) {
+            throw new Error(`测试 Webhook 失败: \n${text}`);
           }
         });
     });
