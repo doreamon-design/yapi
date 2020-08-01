@@ -124,8 +124,11 @@ class webhookModel extends baseModel {
   }
 
   async tryToUpdateDeactiveByUid(projectId, uid) {
-    const doc = await this.getDeactiveByUid(projectId, uid);
+    if (!uid) {
+      return ;
+    }
 
+    const doc = await this.getDeactiveByUid(projectId, uid);
     if (doc) {
       doc.active = true;
       doc.error = '';
