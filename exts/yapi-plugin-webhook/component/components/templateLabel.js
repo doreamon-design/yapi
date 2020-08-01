@@ -64,18 +64,19 @@ export default function TemplateLabel(props) {
   );
 
   return (
-    <Popover
-      trigger="hover"
-      title="模板消息如何使用?"
-      content={content}
-    >
-      <div className="webhook-template-label">
-        <span>
-          模板消息
+    <div className="webhook-template-label">
+      <span>
+        <span>模板消息</span>
+        <Popover
+          trigger="hover"
+          title="模板消息如何使用?"
+          content={content}
+        >
           <Icon type="question-circle" />
-        </span>
+        </Popover>
+      </span>
         （<a onClick={onFormat}>格式化</a>）
-      </div>
-    </Popover>
+    </div>
+
   );
 }

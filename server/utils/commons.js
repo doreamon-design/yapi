@@ -23,6 +23,7 @@ const ejs = require('easy-json-schema');
 const jsf = require('json-schema-faker');
 const { schemaValidator } = require('../../common/utils');
 const http = require('http');
+const { type } = require('os');
 
 jsf.extend('mock', function () {
   return {
@@ -237,9 +238,16 @@ exports.sendWebhook = async (options) => {
       const templateData = renderTemplate(
         t.template,
         (key) => {
-          return getTemplateValue(options.metadata, key, '-')
-            .replace(/\"/g, '\\"')
-            .replace(/\r?\n/g, '\\n');
+          const value = getTemplateValue(options.metadata, key, '-');
+
+          // @TODO diffView 这个有问题，替换不足
+          if (typeof value === 'string') {
+            return value
+              .replace(/\"/g, '\\"')
+              .replace(/\r?\n/g, '\\n');
+          }
+
+          return value;
         },
         {
           start: '{{',
@@ -248,7 +256,7 @@ exports.sendWebhook = async (options) => {
       );
 
 
-      // console.log('webhook template data: ', t.method, t.url, templateData);
+      console.log('webhook template data: ', t.method, t.url, templateData);
 
       const jsonData = JSON.parse(templateData);
 
