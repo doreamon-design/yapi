@@ -207,6 +207,21 @@ export default function Webhook({ projectId }) {
     api.test(projectId, record)
       .then(() => {
         message.success('测试 Webhook 成功');
+
+        setLoading(true);
+
+        api.list(projectId)
+          .then(({ total, data }) => {
+            setDataSource({
+              ...dataSource,
+              table: data,
+            });
+
+            setTotal(total);
+          })
+          .finally(() => {
+            setLoading(false);
+          });
       })
       .catch((error) => {
         const response = error.response;

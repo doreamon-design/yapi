@@ -114,6 +114,24 @@ class webhookModel extends baseModel {
       active: true,
     });
   }
+
+  async getDeactiveByUid(projectId, uid) {
+    return this.model.findOne({
+      projectId,
+      uid,
+      active: false,
+    });
+  }
+
+  async tryToUpdateDeactiveByUid(projectId, uid) {
+    const doc = await this.getDeactiveByUid(projectId, uid);
+
+    if (doc) {
+      doc.active = true;
+      doc.error = '';
+      return doc.save();
+    }
+  }
 }
 
 module.exports = webhookModel;

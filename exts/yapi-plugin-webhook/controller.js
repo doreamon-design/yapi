@@ -210,6 +210,8 @@ class WebhookController extends baseController {
         metadata,
       });
 
+      await this.model.tryToUpdateDeactiveByUid(projectId, uid);
+
       await yapi.commons.success(ctx, null);
     } catch (err) {
       console.log(err);
