@@ -168,8 +168,10 @@ export default function Webhook({ projectId }) {
       .then(() => {
         message.success('测试 Webhook 成功');
       })
-      .catch((err) => {
-        message.error('测试 Webhook 失败: ', err.message);
+      .catch((error) => {
+        const response = error.response;
+        const message =  response.data.errmsg || '测试 Webhook 失败';
+        message.error(message, 5);
       });
   }, [dataSource, visible]);
 
@@ -191,8 +193,8 @@ export default function Webhook({ projectId }) {
             setLoading(false);
           });
       })
-      .catch(() => {
-        message.error('删除 Webhook 失败');
+      .catch((error) => {
+        message.error(error.message || '删除 Webhook 失败');
       });
   }, [dataSource, visible]);
 

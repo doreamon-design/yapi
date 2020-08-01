@@ -208,9 +208,10 @@ class WebhookController extends baseController {
         metadata,
       });
 
-      ctx.body = yapi.commons.resReturn(null);
+      await yapi.commons.success(ctx, null);
     } catch (err) {
-      ctx.body = yapi.commons.resReturn(null, 400, 'Webhook 测试失败');
+      console.log(err);
+      await yapi.commons.fail(ctx, 4001000, err.message || 'Webhook 测试失败', 400);
     }
   }
 }

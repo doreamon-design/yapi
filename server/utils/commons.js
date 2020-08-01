@@ -16,6 +16,7 @@ const Mock = require('mockjs');
 const fetch = require('node-fetch');
 const renderTemplate = require('@zodash/format').format;
 const getTemplateValue = require('@zodash/get').get;
+const qs = require('querystring');
 
 const ejs = require('easy-json-schema');
 
@@ -67,6 +68,26 @@ exports.resReturn = (data, num, errmsg) => {
     errcode: num,
     errmsg: errmsg || '成功！',
     data: data
+  };
+};
+
+exports.success = async (ctx, data, status) => {
+  ctx.status = status || 200;
+
+  ctx.body = {
+    errcode: ctx.status,
+    errmsg: null,
+    data,
+  };
+};
+
+exports.fail = async (ctx, code, message, status) => {
+  ctx.status = status || 500;
+
+  ctx.body = {
+    errcode: code,
+    errmsg: message,
+    data: null,
   };
 };
 
@@ -237,24 +258,33 @@ exports.sendWebhook = async (options) => {
         : JSON.stringify(jsonData);
       
       return fetch(t.url,  {
-        timeout: 5000,
-        method: t.method,
-        headers: {
-          'Content-Type': t.contentType,
-        },
-        body,
-      })
-      .then(async (res) => {
-        if (!res.ok) {
-          throw new Error(`status(${res.status}) text("${await res.text()}")`); 
-        }
-      });
+          timeout: 5000,
+          method: t.method,
+          headers: {
+            'Content-Type': t.contentType,
+          },
+          body,
+        })
+        .then(async (res) => {
+          const text = await res.text();
+
+          if (!res.ok) {
+            throw new Error(`status(${res.status}) text("${text}")`); 
+          }
+
+          // 飞书 { error, ok }
+          const data = JSON.parse(text);
+          console.log('飞书: ', data, data.ok, data.error);
+          if (!data.ok) {
+            throw new Error(`测试 Webhook 失败(飞书): \n${text}`);
+          }
+        });
     });
 
-    return Promise.all(promises);
+    return await Promise.all(promises);
   } catch (err) {
+    // console.log('catch error: ', err);
     yapi.commons.log(err.message, 'error');
-    // console.error(e.message); // eslint-disable-line
 
     throw err;
   }
