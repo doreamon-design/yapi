@@ -237,7 +237,6 @@ exports.sendWebhook = async (options) => {
       const templateData = renderTemplate(
         t.template,
         (key) => {
-          console.log(key);
           return getTemplateValue(options.metadata, key, '-')
             .replace(/\"/g, '\\"')
             .replace(/\r?\n/g, '\\n');
@@ -249,7 +248,7 @@ exports.sendWebhook = async (options) => {
       );
 
 
-      console.log('webhook template data: ', t.method, t.url, templateData);
+      // console.log('webhook template data: ', t.method, t.url, templateData);
 
       const jsonData = JSON.parse(templateData);
 
@@ -275,20 +274,30 @@ exports.sendWebhook = async (options) => {
 
           try {
             data = JSON.parse(text);
-          } catch (error) {
-            console.log('error: ', error.message);
+          } catch (err) {
+            console.log('error: ', err.message);
+
             // 未知
-            throw new Error('未知错误: ' + text);
+            const error = new Error('未知错误: ' + text);
+            error.webhook = t;
+            error.responseText = '未知错误: ' + text;
+            throw error;
           }
 
           // 飞书: { error, ok }
           if ('ok' in data && !data.ok) {
-            throw new Error(`测试 Webhook 失败: \n${text}`);
+            const error = new Error(`测试 Webhook 失败: \n${text}`);
+            error.webhook = t;
+            error.responseText = text;
+            throw error;
           }
 
           // 企业微信: { errcode, errmsg }
           if ('errcode' in data && data.errcode !== 0) {
-            throw new Error(`测试 Webhook 失败: \n${text}`);
+            const error = new Error(`测试 Webhook 失败: \n${text}`);
+            error.webhook = t;
+            error.responseText = text;
+            throw error;
           }
         });
     });
@@ -296,7 +305,7 @@ exports.sendWebhook = async (options) => {
     return await Promise.all(promises);
   } catch (err) {
     // console.log('catch error: ', err);
-    yapi.commons.log(err.message, 'error');
+    // yapi.commons.log(err.message, 'error');
 
     throw err;
   }

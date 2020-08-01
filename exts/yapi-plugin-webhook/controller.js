@@ -136,6 +136,7 @@ class WebhookController extends baseController {
   async test(ctx) {
     const projectId = +ctx.query.projectId;
     const {
+      uid,
       method,
       url,
       contentType,
@@ -163,6 +164,7 @@ class WebhookController extends baseController {
     }
 
     const to = [{
+      uid,
       method,
       url,
       contentType,
@@ -211,6 +213,15 @@ class WebhookController extends baseController {
       await yapi.commons.success(ctx, null);
     } catch (err) {
       console.log(err);
+      const { webhook, responseText } = err;
+
+      if (webhook && webhook.uid) {
+        await this.model.update(projectId, uid, {
+          active: false,
+          error: responseText,
+        });
+      }
+      
       await yapi.commons.fail(ctx, 4001000, err.message || 'Webhook 测试失败', 400);
     }
   }

@@ -35,6 +35,16 @@ const noticeObj = {
 
         yapi.commons.log('send webhook ' + options.to + ' success: ' + text);
       } catch (err) {
+        const { webhook, responseText } = err;
+
+        if (webhook && webhook.uid) {
+          const model = yapi.getInst(require('../../exts/yapi-plugin-webhook/model'));
+          await model.update(projectId, uid, {
+            active: false,
+            error: responseText,
+          });
+        }
+
         yapi.commons.log('send webhook ' + options.to + ' response: ' + err.message, 'error');
       }
     },
@@ -66,7 +76,7 @@ yapi.commons.sendNotice = async function(projectId, data, metadata) {
   const usersInfo = await userInst.findByUids(users);
   const emails = usersInfo.map(item => item.email).join(',');
 
-  const webhooks = await webhookInst.getByProjectId(projectId);
+  const webhooks = await webhookInst.getActiveWebhooksByProjectId(projectId);
 
   // console.log('project webhooks: ', projectId, webhooks);
 

@@ -39,6 +39,15 @@ class webhookModel extends baseModel {
       template: String,
       createdAt: Number,
       updatedAt: Number,
+      // 是否启用
+      active: {
+        type: Boolean,
+        default: true,
+      },
+      // 最近错误信息
+      error: {
+        type: String,
+      },
     };
   }
 
@@ -95,7 +104,14 @@ class webhookModel extends baseModel {
 
   async getByProjectId(projectId) {
     return this.model.find({
-      projectId: projectId
+      projectId: projectId,
+    });
+  }
+
+  async getActiveWebhooksByProjectId(projectId) {
+    return this.model.find({
+      projectId: projectId,
+      active: true,
     });
   }
 }
