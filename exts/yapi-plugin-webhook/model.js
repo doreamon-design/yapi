@@ -104,22 +104,25 @@ class webhookModel extends baseModel {
 
   async getByProjectId(projectId) {
     return this.model.find({
-      projectId: projectId,
+      projectId,
     });
   }
 
   async getActiveWebhooksByProjectId(projectId) {
-    return this.model.find({
-      projectId: projectId,
-      active: true,
-    });
+    return this.model
+      .find({
+        projectId,
+        active: true,
+      });
   }
 
   async getDeactiveByUid(projectId, uid) {
     return this.model.findOne({
       projectId,
       uid,
-      active: false,
+      active: {
+        $ne: true,
+      },
     });
   }
 
@@ -129,6 +132,7 @@ class webhookModel extends baseModel {
     }
 
     const doc = await this.getDeactiveByUid(projectId, uid);
+    // console.log('deactive doc: ', doc);
     if (doc) {
       doc.active = true;
       doc.error = '';

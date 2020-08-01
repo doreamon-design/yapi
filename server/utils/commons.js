@@ -307,7 +307,7 @@ exports.sendWebhook = async (options) => {
 
     return await Promise.all(promises);
   } catch (err) {
-    // console.log('catch error: ', err);
+    console.log('sendWebhooks error: ', err);
     // yapi.commons.log(err.message, 'error');
 
     throw err;

@@ -22,7 +22,7 @@ const noticeObj = {
   webhook: {
     title: 'webhook',
     handler: async ({ webhooks }, title, content, metadata) => {
-      // console.log('发送 webhooks:', webhooks, title, content);
+      console.log('发送 webhooks:', webhooks);
       if (!(yapi.config.webhook && yapi.config.webhook.enable)) return false;
 
       try {
@@ -33,7 +33,7 @@ const noticeObj = {
           metadata,
         });
 
-        yapi.commons.log('send webhook ' + options.to + ' success: ' + text);
+        yapi.commons.log('send webhook ' + webhooks + ' success');
       } catch (err) {
         const { webhook, responseText } = err;
 
@@ -45,7 +45,7 @@ const noticeObj = {
           });
         }
 
-        yapi.commons.log('send webhook ' + options.to + ' response: ' + err.message, 'error');
+        yapi.commons.log('send webhook ' + webhooks + ' response: ' + err.message, 'error');
       }
     },
   },
@@ -81,7 +81,7 @@ yapi.commons.sendNotice = async function(projectId, data, metadata) {
   // console.log('project webhooks: ', projectId, webhooks);
 
   try {
-    console.log('发送通知: 邮件, Webhook');
+    // console.log('发送通知: 邮件, Webhook');
 
     Object.keys(noticeObj).forEach(key=>{
       let noticeItem = noticeObj[key];
