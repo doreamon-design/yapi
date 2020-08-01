@@ -798,7 +798,8 @@ class interfaceController extends baseController {
               name: data.title,
               method: data.method,
               path: data.path,
-              docUrl: interfaceUrl
+              docUrl: interfaceUrl,
+              onlineUrl: interfaceUrl,
             },
             diff: {
               html: this.diffHTML(diffView),
