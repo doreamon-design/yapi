@@ -70,7 +70,7 @@ const UpdateForm = (props) => {
       </div>
       <div>
         <Button onClick={onCancel}>取消</Button>
-        <Button type="primary" onClick={_onSumbit}>保存</Button>
+        <Button type="primary" onClick={_onSumbit}>确定</Button>
       </div>
     </div>
   );

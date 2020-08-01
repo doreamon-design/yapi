@@ -316,6 +316,7 @@ export default function Webhook({ projectId }) {
         visible={visible.create}
         onSubmit={onSubmitCreate}
         onCancel={createCancel('create')}
+        onTest={onTest}
       />
       <Update
         visible={visible.update}
