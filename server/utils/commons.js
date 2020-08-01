@@ -209,46 +209,59 @@ exports.sendMail = (options, cb) => {
 };
 
 exports.sendWebhook = (options, cb) => {
-  if (!yapi.webhook || !yapi.webhook.enable) return false;
+  if (!(yapi.config.webhook && yapi.config.webhook.enable)) return false;
   options.subject = options.subject ? options.subject + '-API DOCS 平台' : 'API DOCS 平台';
 
   cb =
     cb ||
-    function (err) {
+    function (err, text) {
       if (err) {
         yapi.commons.log('send webhook ' + options.to + ' response: ' + err.message, 'error');
       } else {
-        yapi.commons.log('send webhook ' + options.to + ' success');
+        yapi.commons.log('send webhook ' + options.to.name + ' success: ' + text);
       }
     };
 
+  // console.log('sendWebhook: ', options);
   try {
     options.to.forEach(t => {
-      const data = renderTemplate(
+      const templateData = renderTemplate(
         t.template,
         (key) => {
-          return getTemplateValue(options.metadata, key, '-');
+          console.log(key);
+          return getTemplateValue(options.metadata, key, '-')
+            .replace(/\"/g, '\\"')
+            .replace(/\r?\n/g, '\\n');
         },
         {
-        start: '{{',
-        end: '}}',
-        });
+          start: '{{',
+          end: '}}',
+        },
+      );
 
-      console.log('webhook template data: ', JSON.parse(data));
 
+      console.log('webhook template data: ', t.method, t.url, templateData);
+
+      const jsonData = JSON.parse(templateData);
+
+      const body = t.contentType.indexOf('application/x-www-form-urlencoded') !== -1
+        ? qs.stringify(jsonData)
+        : JSON.stringify(jsonData);
+      
       return fetch(t.url,  {
+        timeout: 5000,
         method: t.method,
         headers: {
           'Content-Type': t.contentType,
         },
-        data: t.contentType.indexOf('application/x-www-form-urlencoded') !== -1
-          ? qs.stringify(data)
-          : JSON.stringify(data),
+        body,
       })
       .then(async (res) => {
         if (!res.ok) {
           throw new Error(`status(${res.status}) text("${await res.text()}")`); 
         }
+
+        cb(null, await res.text());
       })
       .catch(e => {
         cb(e);

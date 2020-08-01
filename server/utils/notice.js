@@ -37,7 +37,7 @@ yapi.emitHook('addNotice', noticeObj)
 
 yapi.commons.sendNotice = async function(projectId, data, metadata) {
   const projectModel = require('../models/project.js');
-  const webhookModel = require('../models/webhook.js');
+  const webhookModel = require('../../exts/yapi-plugin-webhook/model');
   const userModel = require('../models/user.js');
   const followModel = require('../models/follow.js');
 
@@ -63,9 +63,11 @@ yapi.commons.sendNotice = async function(projectId, data, metadata) {
   // console.log('project webhooks: ', projectId, webhooks);
 
   try {
+    console.log('发送通知: 邮件, Webhook');
+    
     Object.keys(noticeObj).forEach(key=>{
       let noticeItem = noticeObj[key];
-      // console.log('send mails: ', emails);
+
       try{
         noticeItem.handler({
           emails,

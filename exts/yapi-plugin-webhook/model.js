@@ -9,8 +9,12 @@ class webhookModel extends baseModel {
 
   getSchema() {
     return {
+      name: {
+        type: String,
+        required: true,
+      },
       uid: {
-        type: Number,
+        type: String,
         required: true,
       },
       projectId: {
@@ -21,7 +25,9 @@ class webhookModel extends baseModel {
         type: String,
         default: 'POST',
       },
-      url: String,
+      url: {
+        type: String,
+      },
       contentType: {
         type: String,
         default: 'application/json',
@@ -31,30 +37,45 @@ class webhookModel extends baseModel {
         ],
       },
       template: String,
+      createdAt: Number,
+      updatedAt: Number,
     };
   }
 
-  create(doc) {
+  async create(doc) {
     const instance = new this.model(doc);
     return instance.save();
   }
 
-  list(projectId) {
+  async list(projectId) {
+    const total = await this.model.countDocuments({ projectId });
+
+    const data = await this.model
+      .find({
+        projectId,
+      })
+      .sort({
+        updatedAt: -1,
+      });
+
+    return {
+      total,
+      data,
+    };
+  }
+
+  async retrieve(projectId, uid) {
     return this.model.findOne({
       projectId,
+      uid,
     });
   }
 
-  retrieve(_id) {
-    return this.model.findOne({
-      _id,
-    });
-  }
-
-  update(_id, doc) {
+  async update(projectId, uid, doc) {
     return this.model.updateOne(
       {
-        _id,
+        projectId,
+        uid,
       },
       {
         $set: doc,
@@ -65,13 +86,14 @@ class webhookModel extends baseModel {
     );
   }
 
-  delete(_id) {
-    return this.model.delete({
-      _id,
+  async delete(projectId, uid) {
+    return this.model.deleteOne({
+      projectId,
+      uid,
     });
   }
 
-  getByProjectId(projectId) {
+  async getByProjectId(projectId) {
     return this.model.find({
       projectId: projectId
     });

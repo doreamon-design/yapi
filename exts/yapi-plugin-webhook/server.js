@@ -6,21 +6,42 @@ const controller = require('./controller');
 module.exports = function () {
   // yapi.getInst(interfaceSyncUtils);
 
-  // this.bindHook('add_router', function (addRouter) {
+  this.bindHook('add_router', function (addRouter) {
 
-  //   addRouter({
-  //     controller: controller,
-  //     method: 'get',
-  //     path: 'webhook/get',
-  //     action: 'getSync'
-  //   });
+    addRouter({
+      controller: controller,
+      method: 'get',
+      path: 'webhook/list',
+      action: 'list'
+    });
 
-  //   addRouter({
-  //     controller: controller,
-  //     method: 'post',
-  //     path: 'webhook/save',
-  //     action: 'upSync'
-  //   });
-  // });
+    addRouter({
+      controller: controller,
+      method: 'post',
+      path: 'webhook/create',
+      action: 'create'
+    });
+
+    addRouter({
+      controller: controller,
+      method: 'post',
+      path: 'webhook/update',
+      action: 'update'
+    });
+
+    addRouter({
+      controller: controller,
+      method: 'post',
+      path: 'webhook/delete',
+      action: 'delete'
+    });
+
+    // addRouter({
+    //   controller: controller,
+    //   method: 'post',
+    //   path: 'webhook/save',
+    //   action: 'upSync'
+    // });
+  });
 
 };
