@@ -163,7 +163,7 @@ export default function Webhook({ projectId }) {
 
   const onTest = useCallback((record) => {
     message.info('测试 Webhook ...');
-    
+
     api.test(projectId, record)
       .then(() => {
         message.success('测试 Webhook 成功');
@@ -322,6 +322,7 @@ export default function Webhook({ projectId }) {
         dataSource={dataSource.update}
         onSubmit={onSubmitUpdate}
         onCancel={createCancel('update')}
+        onTest={onTest}
       />
     </div>
   )

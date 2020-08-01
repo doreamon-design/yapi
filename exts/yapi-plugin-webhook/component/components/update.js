@@ -2,7 +2,7 @@
 
 import React, { useState, useCallback } from 'react';
 
-import { Modal, Form, Input, Icon, Select } from 'antd';
+import { Modal, Form, Input, Icon, Select, Button } from 'antd';
 
 const FormItem = Form.Item;
 const TextArea = Input.TextArea;
@@ -19,12 +19,8 @@ const formLayout = {
 };
 
 const UpdateForm = (props) => {
-  const { form, visible, onCancel, onSubmit } = props;
+  const { form, visible, onCancel, onSubmit, onTest } = props;
   const { getFieldDecorator } = form;
-
-  const modalFooter = {
-    okText: '保存',
-  };
 
   const onFormat = useCallback(() => {
     try {
@@ -56,6 +52,28 @@ const UpdateForm = (props) => {
       }
     });
   }, [form, visible]);
+
+  const _onTest = useCallback(() => {
+    form.validateFieldsAndScroll((err, values) => {
+      if (!err) {
+        if (onTest) {          
+          onTest(values);
+        }
+      }
+    });
+  }, [form, visible]);
+
+  const renderFooter = () => (
+    <div className="webhook-modal-footer">
+      <div>
+        <Button type="primary" onClick={_onTest}>测试</Button>
+      </div>
+      <div>
+        <Button onClick={onCancel}>取消</Button>
+        <Button type="primary" onClick={_onSumbit}>保存</Button>
+      </div>
+    </div>
+  );
 
   const renderForm = () => {
     return (
@@ -140,10 +158,10 @@ const UpdateForm = (props) => {
       width={640}
       destroyOnClose
       visible={visible}
-      {...modalFooter}
       onOk={_onSumbit}
       onCancel={onCancel}
       maskClosable={false}
+      footer={renderFooter()}
     >
       {renderForm()}
     </Modal>
