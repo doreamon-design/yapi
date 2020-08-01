@@ -36,6 +36,13 @@ module.exports = function () {
       action: 'delete'
     });
 
+    addRouter({
+      controller: controller,
+      method: 'post',
+      path: 'webhook/test',
+      action: 'test'
+    });
+
     // addRouter({
     //   controller: controller,
     //   method: 'post',

@@ -53,6 +53,12 @@ const api = {
   async delete(projectId, uid) {
     await axios.post(`/api/plugin/webhook/delete?projectId=${projectId}&uid=${uid}`);
   },
+  async test(projectId, doc) {
+    await axios.post(`/api/plugin/webhook/test?projectId=${projectId}`, {
+      ...doc,
+      projectId,
+    });
+  },
 };
 
 export default function Webhook({ projectId }) {
@@ -84,6 +90,7 @@ export default function Webhook({ projectId }) {
           <div className="actions">
             <a className="action"  onClick={createOpen('update', record)}>编辑</a>
             <a className="action"  onClick={() => onCopy(record)}>复制</a>
+            <a className="action"  onClick={() => onTest(record)}>测试</a>
             <a className="action"  onClick={() => onConfirmDelete(record)}>删除</a>
           </div>
         );
@@ -151,6 +158,18 @@ export default function Webhook({ projectId }) {
       })
       .catch(() => {
         message.error('删除 Webhook 失败');
+      });
+  }, [dataSource, visible]);
+
+  const onTest = useCallback((record) => {
+    message.info('测试 Webhook ...');
+    
+    api.test(projectId, record)
+      .then(() => {
+        message.success('测试 Webhook 成功');
+      })
+      .catch((err) => {
+        message.error('测试 Webhook 失败: ', err.message);
       });
   }, [dataSource, visible]);
 

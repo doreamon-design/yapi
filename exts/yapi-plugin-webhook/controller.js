@@ -1,9 +1,7 @@
 const baseController = require('controllers/base');
 const yapi = require('yapi');
-const projectModel = require('models/project');
 
 const model = require('./model');
-// const utils = require('./service')
 
 class WebhookController extends baseController {
   constructor(ctx) {
@@ -135,50 +133,86 @@ class WebhookController extends baseController {
     ctx.body = yapi.commons.resReturn(data);
   }
 
-  // /**
-  //  * 保存定时任务
-  //  * @param {*} ctx 
-  //  */
-  // async upSync(ctx) {
-  //   let requestBody = ctx.request.body;
-  //   let projectId = requestBody.project_id;
-  //   if (!projectId) {
-  //     return (ctx.body = yapi.commons.resReturn(null, 408, '缺少项目Id'));
-  //   }
+  async test(ctx) {
+    const projectId = +ctx.query.projectId;
+    const {
+      method,
+      url,
+      contentType,
+      template,
+    } = ctx.request.body;
 
-  //   if ((await this.checkAuth(projectId, 'project', 'edit')) !== true) {
-  //     return (ctx.body = yapi.commons.resReturn(null, 405, '没有权限'));
-  //   }
+    if (!method) {
+      return (ctx.body = yapi.commons.resReturn(null, 400, 'method不能为空'));
+    }
 
-  //   let result;
-  //   if (requestBody.id) {
-  //     result = await this.model.up(requestBody);
-  //   } else {
-  //     result = await this.model.save(requestBody);
-  //   }
+    if (!url) {
+      return (ctx.body = yapi.commons.resReturn(null, 400, 'url不能为空'));
+    }
 
-  //   //操作定时任务
-  //   if (requestBody.is_sync_open) {
-  //     this.interfaceSyncUtils.addSyncJob(projectId, requestBody.sync_cron, requestBody.syncon_url, requestBody.sync_mode, requestBody.uid);
-  //   } else {
-  //     this.interfaceSyncUtils.deleteSyncJob(projectId);
-  //   }
-  //   return (ctx.body = yapi.commons.resReturn(result));
-  // }
+    if (!contentType) {
+      return (ctx.body = yapi.commons.resReturn(null, 400, 'contentType不能为空'));
+    }
 
-  // /**
-  //  * 查询定时任务
-  //  * @param {*} ctx 
-  //  */
-  // async getSync(ctx) {
-  //   let projectId = ctx.query.project_id;
-  //   if (!projectId) {
-  //     return (ctx.body = yapi.commons.resReturn(null, 408, '缺少项目Id'));
-  //   }
-  //   let result = await this.model.getByProjectId(projectId);
-  //   return (ctx.body = yapi.commons.resReturn(result));
-  // }
+    if (!template) {
+      return (ctx.body = yapi.commons.resReturn(null, 400, 'template不能为空'));
+    }
 
+    if ((await this.checkAuth(projectId, 'project', 'edit')) !== true) {
+      return (ctx.body = yapi.commons.resReturn(null, 405, '没有权限'));
+    }
+
+    const to = [{
+      method,
+      url,
+      contentType,
+      template,
+    }];
+
+    const user = {
+      username: '测试用户账号',
+    };
+    const project = {
+      name: '测试项目',
+    };
+    const data = {
+      title: '测试数据',
+      method: 'GET',
+      path: '/test-url',
+      docUrl: '...',
+    };
+    const metadata = {
+      title: `${user.username} 更新了接口 ${data.title} (项目名：${project.name})`,
+      content: `修改用户: ${user.username}
+项目名：${project.name}
+接口路径: [${data.method}] ${data.path}
+详细改动日志: 改动了....`,
+      modifier: {
+        name: user.username,
+      },
+      project,
+      api: {
+        name: data.title,
+        method: data.method,
+        path: data.path,
+        docUrl: data.docUrl,
+      },
+      diff: {
+        html: '<span>变化html</span>',
+      },
+    };
+
+    try {
+      await yapi.commons.sendWebhook({
+        to,
+        metadata,
+      });
+
+      ctx.body = yapi.commons.resReturn(null);
+    } catch (err) {
+      ctx.body = yapi.commons.resReturn(null, 400, 'Webhook 测试失败');
+    }
+  }
 }
 
 

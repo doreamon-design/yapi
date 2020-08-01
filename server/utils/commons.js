@@ -208,23 +208,11 @@ exports.sendMail = (options, cb) => {
   }
 };
 
-exports.sendWebhook = (options, cb) => {
-  if (!(yapi.config.webhook && yapi.config.webhook.enable)) return false;
+exports.sendWebhook = async (options) => {
   options.subject = options.subject ? options.subject + '-API DOCS 平台' : 'API DOCS 平台';
 
-  cb =
-    cb ||
-    function (err, text) {
-      if (err) {
-        yapi.commons.log('send webhook ' + options.to + ' response: ' + err.message, 'error');
-      } else {
-        yapi.commons.log('send webhook ' + options.to.name + ' success: ' + text);
-      }
-    };
-
-  // console.log('sendWebhook: ', options);
   try {
-    options.to.forEach(t => {
+    const promises = options.to.map(t => {
       const templateData = renderTemplate(
         t.template,
         (key) => {
@@ -260,21 +248,15 @@ exports.sendWebhook = (options, cb) => {
         if (!res.ok) {
           throw new Error(`status(${res.status}) text("${await res.text()}")`); 
         }
-
-        cb(null, await res.text());
-      })
-      .catch(e => {
-        cb(e);
-
-        // yapi.commons.log(e.message, 'error');
-        // console.error(e.message); // eslint-disable-line
       });
-    })
-  } catch (e) {
-    cb(e);
+    });
 
-    yapi.commons.log(e.message, 'error');
-    console.error(e.message); // eslint-disable-line
+    return Promise.all(promises);
+  } catch (err) {
+    yapi.commons.log(err.message, 'error');
+    // console.error(e.message); // eslint-disable-line
+
+    throw err;
   }
 }
 
