@@ -142,7 +142,7 @@ export default function Webhook({ projectId }) {
             <a className="action"  onClick={createOpen('update', record)}>编辑</a>
             <a className="action"  onClick={() => onCopy(record)}>复制</a>
             <a className="action"  onClick={() => onTest(record)}>测试</a>
-            <a className="action"  onClick={() => onConfirmDelete(record)}>删除</a>
+            <a className="action delete"  onClick={() => onConfirmDelete(record)}>删除</a>
           </div>
         );
       }
