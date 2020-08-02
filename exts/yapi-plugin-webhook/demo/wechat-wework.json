@@ -1,0 +1,7 @@
+{
+  "name": "企业微信",
+  "method": "POST",
+  "contentType": "application/json",
+  "url": "https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=XXX",
+  "template": "{\n \"msgtype\": \"text\",\n \"text\": {\n \"content\": \"{{title}}\\n\\n{{content}}\\n\\n{{diff.html}}\",\n \"mentioned_list\": [],\n \"mentioned_mobile_list\": [\n ]\n }\n}"
+}

@@ -13,14 +13,17 @@ const json5 = require('json5');
 const _ = require('underscore');
 const Ajv = require('ajv');
 const Mock = require('mockjs');
-
-
+const fetch = require('node-fetch');
+const renderTemplate = require('@zodash/format').format;
+const getTemplateValue = require('@zodash/get').get;
+const qs = require('querystring');
 
 const ejs = require('easy-json-schema');
 
 const jsf = require('json-schema-faker');
 const { schemaValidator } = require('../../common/utils');
 const http = require('http');
+const { type } = require('os');
 
 jsf.extend('mock', function () {
   return {
@@ -66,6 +69,26 @@ exports.resReturn = (data, num, errmsg) => {
     errcode: num,
     errmsg: errmsg || '成功！',
     data: data
+  };
+};
+
+exports.success = async (ctx, data, status) => {
+  ctx.status = status || 200;
+
+  ctx.body = {
+    errcode: ctx.status,
+    errmsg: null,
+    data,
+  };
+};
+
+exports.fail = async (ctx, code, message, status) => {
+  ctx.status = status || 500;
+
+  ctx.body = {
+    errcode: code,
+    errmsg: message,
+    data: null,
   };
 };
 
@@ -206,6 +229,98 @@ exports.sendMail = (options, cb) => {
     console.error(e.message); // eslint-disable-line
   }
 };
+
+exports.sendWebhook = async (options) => {
+  options.subject = options.subject ? options.subject + '-API DOCS 平台' : 'API DOCS 平台';
+
+  try {
+    const promises = options.to.map(t => {
+      const templateData = renderTemplate(
+        t.template,
+        (key) => {
+          const value = getTemplateValue(options.metadata, key, '-');
+
+          // @TODO diffView 这个有问题，替换不足
+          if (typeof value === 'string') {
+            return value
+              .replace(/\"/g, '\\"')
+              .replace(/\r?\n/g, '\\n');
+          }
+
+          return value;
+        },
+        {
+          start: '{{',
+          end: '}}',
+        },
+      );
+
+
+      console.log('webhook template data: ', t.method, t.url, templateData);
+
+      const jsonData = JSON.parse(templateData);
+
+      const body = t.contentType.indexOf('application/x-www-form-urlencoded') !== -1
+        ? qs.stringify(jsonData)
+        : JSON.stringify(jsonData);
+      
+      return fetch(t.url,  {
+          timeout: 5000,
+          method: t.method,
+          headers: {
+            'Content-Type': t.contentType,
+          },
+          body,
+        })
+        .then(async (res) => {
+          const text = await res.text();
+          let data;
+
+          if (!res.ok) {
+            throw new Error(`status(${res.status}) text("${text}")`); 
+          }
+
+          try {
+            data = JSON.parse(text);
+          } catch (err) {
+            console.log('parse json error: ', text);
+
+            // // 未知
+            // const error = new Error('未知错误: ' + text);
+            // error.webhook = t;
+            // error.responseText = '未知错误: ' + text;
+            // throw error;
+          }
+
+          // 飞书: { error, ok }
+          if (typeof data === 'object' && 'ok' in data && !data.ok) {
+            const error = new Error(`测试 Webhook 失败: \n${text}`);
+            error.webhook = t;
+            error.responseText = text;
+            throw error;
+          }
+
+          // 企业微信: { errcode, errmsg }
+          if (typeof data === 'object' && 'errcode' in data && data.errcode !== 0) {
+            const error = new Error(`测试 Webhook 失败: \n${text}`);
+            error.webhook = t;
+            error.responseText = text;
+            throw error;
+          }
+
+          // Slack: ok (Incomming Webhooks App)
+          // text === ok
+        });
+    });
+
+    return await Promise.all(promises);
+  } catch (err) {
+    console.log('sendWebhooks error: ', err);
+    // yapi.commons.log(err.message, 'error');
+
+    throw err;
+  }
+}
 
 exports.validateSearchKeyword = keyword => {
   if (/^\*|\?|\+|\$|\^|\\|\.$/.test(keyword)) {

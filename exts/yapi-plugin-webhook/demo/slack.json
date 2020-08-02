@@ -1,0 +1,7 @@
+{
+  "name": "Slack",
+  "method": "POST",
+  "contentType": "application/json",
+  "url": "https://hooks.slack.com/services/XXX",
+  "template": "{\n \"text\": \"This is a line of text in a channel.\\nAnd this is another line of text.\"\n}"
+}

@@ -58,7 +58,10 @@ const config = {
     },
     secureConnection: true,
     use_authentication: true,
-  }
+  },
+  webhook: {
+    enable: !!process.env.WEBHOOK_ENABLE || true,
+  },
 };
 
 let insts = new Map();
@@ -106,6 +109,7 @@ let r = {
   WEBROOT_RUNTIME: WEBROOT_RUNTIME,
   WEBROOT_LOG: WEBROOT_LOG,
   WEBCONFIG: WEBCONFIG,
+  config,
   getInst: getInst,
   delInst: delInst,
   getInsts: insts

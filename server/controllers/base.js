@@ -6,7 +6,8 @@ const groupModel = require('../models/group.js');
 const tokenModel = require('../models/token.js');
 const _ = require('underscore');
 const jwt = require('jsonwebtoken');
-const {parseToken} = require('../utils/token')
+const {parseToken} = require('../utils/token');
+const uuid = require('uuid');
 
 class baseController {
   constructor(ctx) {
@@ -120,6 +121,10 @@ class baseController {
 
   getUid() {
     return parseInt(this.$uid, 10);
+  }
+
+  uuid() {
+    return uuid.v4();
   }
 
   async checkLogin(ctx) {

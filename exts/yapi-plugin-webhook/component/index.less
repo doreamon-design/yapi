@@ -1,0 +1,78 @@
+.plugin-webhook {
+  box-sizing: border-box;
+  background-color: #fff;
+  padding: 16px 16px 0 16px;
+  min-height: ~"calc(100vh - 174px - 16px)";
+
+  .ant-table-thead > tr > th {
+    background-color: #fff;
+  }
+
+  tr.ant-table-expanded-row, tr.ant-table-expanded-row:hover {
+    background-color: #fff;
+  }
+
+  .actions {
+    .action {
+      margin-right: 6px;
+      white-space: nowrap;
+
+      &.delete {
+        color: red;
+      }
+    }
+  }
+
+  .expand-row {
+    table tr > td {
+      padding-bottom: 16px;
+      position: relative;
+
+      // code
+      pre {
+        overflow-x: auto;
+        white-space: pre-wrap;
+        word-wrap: break-word;
+      }
+    }
+  }
+
+  .header {
+    display: flex;
+    justify-content: space-between;
+
+    .left {
+      padding-left: 16px;
+
+      span {
+        font-size: 20px;
+      }
+    }
+
+    .right {
+
+    }
+  }
+}
+
+.webhook-template-label {
+  display: inline-block;
+  justify-content: space-between;
+}
+
+.webhook-template-label-tip {
+  min-width: 500px;
+
+  p {
+    margin-bottom: 6px;
+  }
+}
+
+.webhook-modal-footer {
+  display: flex;
+  justify-content: space-between;
+
+  button {
+    margin-left: 8px;
+  }
+}

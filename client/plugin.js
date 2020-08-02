@@ -240,7 +240,7 @@ hooks = {
       interface: { name: 'xxx', component: Xxx },
     }
    */
-  sub_setting_nav:{
+  sub_setting_nav: {
     type: 'listener',
     mulit: true,
     listener: []

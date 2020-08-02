@@ -7,6 +7,8 @@ import ProjectRequest from './ProjectRequest/ProjectRequest';
 import ProjectToken from './ProjectToken/ProjectToken';
 import ProjectMock from './ProjectMock/index.js';
 import { connect } from 'react-redux';
+import * as qs from '@zcorky/query-string';
+
 const TabPane = Tabs.TabPane;
 const plugin = require('client/plugin.js');
 
@@ -17,19 +19,46 @@ import './Setting.scss';
 @connect(state => {
   return {
     curProjectRole: state.project.currProject.role
-  };
+  }
 })
 class Setting extends Component {
   static propTypes = {
+    location: PropTypes.object,
     match: PropTypes.object,
     curProjectRole: PropTypes.string
   };
+
+  state = {
+    activeKey: this.defaultTab
+  };
+
+  get query() {
+    return qs.parse(this.props.location.search);
+  }
+
+  get defaultTab() {
+    return String(this.query.tab || 1).toLowerCase();
+  }
+
+  onTabChange = (activeKey) => {
+
+    this.setState({
+      activeKey
+    });
+  }
+
   render() {
     const id = this.props.match.params.id;
     plugin.emitHook('sub_setting_nav', routers);
+
     return (
       <div className="g-row">
-        <Tabs type="card" className="has-affix-footer tabs-large">
+        <Tabs
+          className="has-affix-footer tabs-large"
+          type="card"
+          defaultActiveKey={this.defaultTab}
+          onChange={this.onTabChange}
+        >
           <TabPane tab="项目配置" key="1">
             <ProjectMessage projectId={+id} />
           </TabPane>
@@ -47,11 +76,14 @@ class Setting extends Component {
           <TabPane tab="全局mock脚本" key="5">
             <ProjectMock projectId={+id} />
           </TabPane>
-          {Object.keys(routers).map(key=>{
+          {Object.keys(routers).map(key => {
             const C = routers[key].component;
-            return <TabPane tab={routers[key].name} key={routers[key].name}>
-              <C projectId={+id} />
-            </TabPane>
+
+            return (
+              <TabPane tab={routers[key].name} key={String(routers[key].name).toLowerCase()}>
+                <C projectId={+id} />
+              </TabPane>
+            );
           })}
         </Tabs>
       </div>
