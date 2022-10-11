@@ -42,7 +42,7 @@ yapi.app = app;
 // app.use(bodyParser({multipart: true}));
 app.use(koaBody({
   multipart: true,
-  jsonLimit: '2mb', 
+  jsonLimit: '2mb',
   ormLimit: '1mb',
   textLimit: '1mb',
 }));
@@ -159,7 +159,7 @@ function getPrefix(ctx) {
 
   const protocol = process.env.SITE_PROTOCOL || ctx.protocol;
   const host = process.env.SITE_HOST || ctx.host;
-  
+
   return `${protocol}://${host}`;
 }
 
@@ -186,8 +186,8 @@ async function ssoOnlySolution(ctx) {
       console.log('sso get user failed.');
       await delay(3000);
       await ctx.redirect(SSO_AUTH_SERVER_URL);
-      
-      return ;
+
+      return;
     }
 
     const user = await res.json();
@@ -202,8 +202,8 @@ async function ssoOnlySolution(ctx) {
       //   sso only => go sso login
       //   sso => go self login
       await ctx.redirect(SSO_AUTH_SERVER_URL);
-      
-      return ;
+
+      return;
     }
 
     const email = lodash.get(user, yapi.WEBCONFIG.user.emailKey);
@@ -212,7 +212,7 @@ async function ssoOnlySolution(ctx) {
     // check user => login or sso
     await loginOrCreate(ctx, email, username);
     await ctx.redirect(`/`);
-    return ;
+    return;
   }
 
 
@@ -268,7 +268,7 @@ async function doreamonOnlySolution(ctx) {
 
     const token = await tokenRes.json();
     // console.log('doreamon token: ', token);
-  
+
     const userRes = await fetch('https://login.zcorky.com/user', {
       method: 'GET',
       headers: {
@@ -299,12 +299,12 @@ async function doreamonOnlySolution(ctx) {
     // check user => login or sso
     await loginOrCreate(ctx, email, username, role);
     await ctx.redirect(`/`);
-    return ;
+    return;
   }
 
 
   // not ticket => go sso
-  await ctx.redirect(`https://login.zcorky.com/?client_id=${client_id}&redirect_uri=${encodeURIComponent(redirect_uri)}&response_type=code&state=_`);
+  await ctx.redirect(`https://login.zcorky.com/v2/authorize?client_id=${client_id}&redirect_uri=${encodeURIComponent(redirect_uri)}&response_type=code&state=_`);
 }
 
 app.use(async function accesslog(ctx, next) {
@@ -326,7 +326,7 @@ app.use(async function accesslog(ctx, next) {
     request: `${ctx.method} ${ctx.path}`,
     status: ctx.status !== 404
       ? ctx.status : !!ctx.body
-      ? 200 : 404,
+        ? 200 : 404,
     responseTime: ctx.responseTime,
     bodyBytesSent: ctx.get('Content-Length') || '-',
     httpRefer: ctx.get('Referer') || '-',
@@ -342,7 +342,7 @@ app.use(async function responseTime(ctx, next) {
   await next();
 
   const deltaHr = process.hrtime(start);
-  const delta =  Math.round(deltaHr[0] * 1000 + deltaHr[1] / 1000000);
+  const delta = Math.round(deltaHr[0] * 1000 + deltaHr[1] / 1000000);
 
   ctx.responseTime = delta;
 
@@ -370,7 +370,7 @@ app.use(async (ctx, next) => {
         code: 4041010,
         message: 'resource not found'
       };
-      return ;
+      return;
     }
 
     return await next();
@@ -388,7 +388,7 @@ app.use(async (ctx, next) => {
         code: 4041010,
         message: 'resource not found'
       };
-      return ;
+      return;
     }
 
     return await doreamonOnlySolution(ctx);
@@ -406,7 +406,7 @@ app.use(async (ctx, next) => {
         code: 4041010,
         message: 'resource not found'
       };
-      return ;
+      return;
     }
 
     return await ssoOnlySolution(ctx);
@@ -451,7 +451,6 @@ const server = app.listen(yapi.WEBCONFIG.port);
 server.setTimeout(yapi.WEBCONFIG.timeout);
 
 commons.log(
-  `服务已启动，请打开下面链接访问: \nhttp://127.0.0.1${
-    yapi.WEBCONFIG.port == '80' ? '' : ':' + yapi.WEBCONFIG.port
+  `服务已启动，请打开下面链接访问: \nhttp://127.0.0.1${yapi.WEBCONFIG.port == '80' ? '' : ':' + yapi.WEBCONFIG.port
   }/`
 );
