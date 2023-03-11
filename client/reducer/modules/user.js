@@ -55,7 +55,7 @@ export default (state = initialState, action) => {
         type: action.payload.data.data ? action.payload.data.data.type : null,
         study: action.payload.data.data ? action.payload.data.data.study : false,
         //
-        isAdmin: role === 'admin',
+        isAdmin: role === 'admin'
       };
 
       if (typeof window != "undefined") {
