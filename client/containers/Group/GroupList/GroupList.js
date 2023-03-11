@@ -216,12 +216,13 @@ export default class GroupList extends Component {
           <div className="curr-group">
             <div className="curr-group-name">
               <span className="name">{currGroup.group_name}</span>
-              <Tooltip title="添加分组">
-                <a className="editSet">
-                  <Icon className="btn" type="folder-add" onClick={this.showModal} />
-                </a>
-              </Tooltip>
-            
+              {window.$user && window.$user.isAdmin && (
+                <Tooltip title="添加分组">
+                  <a className="editSet">
+                    <Icon className="btn" type="folder-add" onClick={this.showModal} />
+                  </a>
+                </Tooltip>
+              )}
             </div>
             <div className="curr-group-desc">简介: {currGroup.group_desc}</div>
           </div>

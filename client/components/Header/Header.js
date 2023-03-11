@@ -126,38 +126,42 @@ const ToolUser = props => {
           </li>
         </Tooltip>
       </Popover>
-      <Popover
-        overlayClassName="popover-index"
-        content={<GuideBtns />}
-        title={tipAdd}
-        placement="bottomRight"
-        arrowPointAtCenter
-        visible={props.studyTip === 2 && !props.study}
-      >
-        <Tooltip placement="bottom" title={'新建项目'}>
-          <li className="toolbar-li">
-            <Link to="/add-project">
-              <Icon className="dropdown-link" style={{ fontSize: 16 }} type="plus-circle" />
-            </Link>
-          </li>
-        </Tooltip>
-      </Popover>
-      <Popover
-        overlayClassName="popover-index"
-        content={<GuideBtns isLast={true} />}
-        title={tipDoc}
-        placement="bottomRight"
-        arrowPointAtCenter
-        visible={props.studyTip === 3 && !props.study}
-      >
-        <Tooltip placement="bottom" title={'使用文档'}>
-          <li className="toolbar-li">
-            <a target="_blank" href="/doc/index.html" rel="noopener noreferrer">
-              <Icon className="dropdown-link" style={{ fontSize: 16 }} type="question-circle" />
-            </a>
-          </li>
-        </Tooltip>
-      </Popover>
+      {window.$user && window.$user.isAdmin && (
+        <Popover
+          overlayClassName="popover-index"
+          content={<GuideBtns />}
+          title={tipAdd}
+          placement="bottomRight"
+          arrowPointAtCenter
+          visible={props.studyTip === 2 && !props.study}
+        >
+          <Tooltip placement="bottom" title={'新建项目'}>
+            <li className="toolbar-li">
+              <Link to="/add-project">
+                <Icon className="dropdown-link" style={{ fontSize: 16 }} type="plus-circle" />
+              </Link>
+            </li>
+          </Tooltip>
+        </Popover>
+      )}
+      {window.$user && window.$user.isAdmin && (
+        <Popover
+          overlayClassName="popover-index"
+          content={<GuideBtns isLast={true} />}
+          title={tipDoc}
+          placement="bottomRight"
+          arrowPointAtCenter
+          visible={props.studyTip === 3 && !props.study}
+        >
+          <Tooltip placement="bottom" title={'使用文档'}>
+            <li className="toolbar-li">
+              <a target="_blank" href="/doc/index.html" rel="noopener noreferrer">
+                <Icon className="dropdown-link" style={{ fontSize: 16 }} type="question-circle" />
+              </a>
+            </li>
+          </Tooltip>
+        </Popover>
+      )}
       <li className="toolbar-li">
         <Dropdown
           placement="bottomRight"

@@ -42,18 +42,27 @@ const initialState = {
 export default (state = initialState, action) => {
   switch (action.type) {
     case GET_LOGIN_STATE: {
-      return {
+      const role = action.payload.data.data ? action.payload.data.data.role : null;
+      const user = {
         ...state,
         isLogin: action.payload.data.errcode == 0,
         isLDAP: action.payload.data.ladp,
         canRegister: action.payload.data.canRegister,
-        role: action.payload.data.data ? action.payload.data.data.role : null,
+        role,
         loginState: action.payload.data.errcode == 0 ? MEMBER_STATUS : GUEST_STATUS,
         userName: action.payload.data.data ? action.payload.data.data.username : null,
         uid: action.payload.data.data ? action.payload.data.data._id : null,
         type: action.payload.data.data ? action.payload.data.data.type : null,
-        study: action.payload.data.data ? action.payload.data.data.study : false
+        study: action.payload.data.data ? action.payload.data.data.study : false,
+        //
+        isAdmin: role === 'admin',
       };
+
+      if (typeof window != "undefined") {
+        window.$user = user;
+      }
+
+      return user;
     }
     case LOGIN: {
       if (action.payload.data.errcode === 0) {
