@@ -454,7 +454,7 @@ class groupController extends baseController {
       privateGroup = privateGroup.toObject();
       privateGroup.group_name = '个人空间';
       privateGroup.role = 'owner';
-      newResult.unshift(privateGroup);
+      // newResult.unshift(privateGroup);
     }
 
     ctx.body = yapi.commons.resReturn(newResult);
