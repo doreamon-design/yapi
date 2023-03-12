@@ -246,7 +246,7 @@ export default class GroupList extends Component {
             <div
               style={{
                 textAlign: "center",
-                padding: 20,
+                padding: 20
               }}
             >
               <span>无项目</span>
