@@ -78,6 +78,8 @@ export default (state = initialState, action) => {
 
 // 获取 group 信息 (权限信息)
 export function fetchGroupMsg(id) {
+  if (typeof id === 'undefined') return;
+
   return {
     type: FETCH_GROUP_MSG,
     payload: axios.get('/api/group/get', {

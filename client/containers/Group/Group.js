@@ -40,15 +40,15 @@ export default class Group extends Component {
     }
   }
 
-  async componentDidMount(){
+  async componentDidMount() {
     let r = await axios.get('/api/group/get_mygroup')
-    try{
+    try {
       let group = r.data.data;
       this.setState({
         groupId: group._id
       })
       this.props.setCurrGroup(group)
-    }catch(e){
+    } catch (e) {
       console.error(e)
     }
   }
@@ -67,7 +67,46 @@ export default class Group extends Component {
   //   // }
   // }
   render() {
-    if(this.state.groupId === -1)return <Spin />
+    // @TODO
+    if (window.location.pathname === '/group/undefined') {
+      return (
+        <Layout style={{ minHeight: 'calc(100vh - 100px)', marginLeft: '24px', marginTop: '24px' }}>
+          <Sider style={{ height: '100%' }} width={300}>
+            <div className="logo" />
+            <GroupList />
+          </Sider>
+          <Layout>
+            <Content
+              style={{
+                position: 'relative',
+                height: '100%',
+                margin: '0 24px 0 16px',
+                overflow: 'initial',
+                backgroundColor: '#fff'
+              }}
+            >
+              <div
+                style={{
+                  position: 'absolute',
+                  top: 0,
+                  left: 0,
+                  with: '100%',
+                  height: '100%',
+                  display: 'flex',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                }}
+              >
+                欢迎使用 API DOCS
+              </div>
+            </Content>
+          </Layout>
+        </Layout>
+      );
+    }
+
+    if (this.state.groupId === -1) return <Spin />
+
     const GroupContent = (
       <Layout style={{ minHeight: 'calc(100vh - 100px)', marginLeft: '24px', marginTop: '24px' }}>
         <Sider style={{ height: '100%' }} width={300}>
@@ -93,7 +132,7 @@ export default class Group extends Component {
                 </TabPane>
               ) : null}
               {['admin', 'owner', 'guest', 'dev'].indexOf(this.props.curUserRoleInGroup) > -1 ||
-              this.props.curUserRole === 'admin' ? (
+                this.props.curUserRole === 'admin' ? (
                 <TabPane tab="分组动态" key="3">
                   <GroupLog />
                 </TabPane>
@@ -101,7 +140,7 @@ export default class Group extends Component {
                 ''
               )}
               {(this.props.curUserRole === 'admin' || this.props.curUserRoleInGroup === 'owner') &&
-              this.props.currGroup.type !== 'private' ? (
+                this.props.currGroup.type !== 'private' ? (
                 <TabPane tab="分组设置" key="4">
                   <GroupSetting />
                 </TabPane>
