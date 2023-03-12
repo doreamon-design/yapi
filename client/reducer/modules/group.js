@@ -155,6 +155,8 @@ export function fetchGroupList() {
 }
 
 export function setCurrGroup(group) {
+  if (!group || typeof group._id === 'undefined') return;
+
   return {
     type: SET_CURR_GROUP,
     payload: axios.get('/api/group/get', {
