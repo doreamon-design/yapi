@@ -122,7 +122,7 @@ class ProjectList extends Component {
     });
     projectData = [...followProject, ...noFollow];
 
-    const isShow = /(admin)|(owner)|(dev)/.test(this.props.currGroup.role);
+    const isShow = /(admin)|(owner)/.test(this.props.currGroup.role);
 
     const Follow = () => {
       return followProject.length ? (
