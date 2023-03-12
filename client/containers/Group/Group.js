@@ -94,7 +94,7 @@ export default class Group extends Component {
                   height: '100%',
                   display: 'flex',
                   justifyContent: 'center',
-                  alignItems: 'center',
+                  alignItems: 'center'
                 }}
               >
                 欢迎使用 API DOCS
@@ -131,16 +131,14 @@ export default class Group extends Component {
                   <MemberList />
                 </TabPane>
               ) : null}
-              {['admin', 'owner', 'guest', 'dev'].indexOf(this.props.curUserRoleInGroup) > -1 ||
-                this.props.curUserRole === 'admin' ? (
+              {['admin', 'owner', 'guest', 'dev'].indexOf(this.props.curUserRoleInGroup) > -1 || this.props.curUserRole === 'admin' ? (
                 <TabPane tab="分组动态" key="3">
                   <GroupLog />
                 </TabPane>
               ) : (
                 ''
               )}
-              {(this.props.curUserRole === 'admin' || this.props.curUserRoleInGroup === 'owner') &&
-                this.props.currGroup.type !== 'private' ? (
+              {(this.props.curUserRole === 'admin' || this.props.curUserRoleInGroup === 'owner') && this.props.currGroup.type !== 'private' ? (
                 <TabPane tab="分组设置" key="4">
                   <GroupSetting />
                 </TabPane>
