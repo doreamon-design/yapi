@@ -427,7 +427,7 @@ module.exports = compose([
   ratelimit({
     driver: 'memory',
     db: ratelimitDb,
-    max: 100,
+    max: 10000,
     duration: 60000,
     id: (ctx) => {
       console.log('ctx.ip: ', ctx.ip);
