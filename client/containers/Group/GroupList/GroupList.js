@@ -243,7 +243,14 @@ export default class GroupList extends Component {
           }} />} */}
           {this.state.groupList.length === 0 && (
             // <Empty />
-            <span>无项目</span>
+            <div
+              style={{
+                textAlign: "center",
+                padding: 20,
+              }}
+            >
+              <span>无项目</span>
+            </div>
           )}
           <Menu
             className="group-list"
