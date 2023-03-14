@@ -3,5 +3,5 @@
 
 
 * [教程](documents/index.md)
-* [内网部署](devops/index.md)
+<!-- * [内网部署](devops/index.md) -->
 * [开放Api](openapi.html)
