@@ -298,6 +298,10 @@ export default class HeaderCom extends Component {
   };
 
   render() {
+    if (isInIframe()) {
+      return null;
+    }
+    
     const { login, user, msg, uid, role, studyTip, study, imageUrl } = this.props;
     return (
       <Header className="header-box m-header">
@@ -327,5 +331,13 @@ export default class HeaderCom extends Component {
         </div>
       </Header>
     );
+  }
+}
+
+function isInIframe() {
+  try {
+    return window.self !== window.top;
+  } catch (e) {
+    return true;
   }
 }
