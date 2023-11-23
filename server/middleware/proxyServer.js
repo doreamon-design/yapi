@@ -76,7 +76,7 @@ module.exports = async (ctx, next) => {
       url,
       headers,
       data,
-      timeout: 10000,
+      timeout: +process.env.PROXY_TIMEOUT || 5 * 60 * 1000,
     });
   } catch (error) {
     aRes = error.response;
