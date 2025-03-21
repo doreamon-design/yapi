@@ -3,7 +3,7 @@ FROM whatwewant/node:12.16-alpine as build
 
 # @FIX node-gyp dependens python, and will be built locally
 #   Reference: https://stackoverflow.com/questions/54428608/docker-node-alpine-image-build-fails-on-node-gyp
-RUN apk add --no-cache python3 make g++ git wget curl grep bash
+RUN apk add --no-cache python make g++ git wget curl grep bash
 
 WORKDIR /client
 
