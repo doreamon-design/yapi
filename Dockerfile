@@ -1,5 +1,5 @@
 # Build
-FROM node:12.16-alpine as build
+FROM whatwewant/node:12.16-alpine as build
 
 WORKDIR /client
 
@@ -19,7 +19,7 @@ RUN  yarn run docs
 
 # Server
 
-FROM node:12.16-alpine
+FROM whatwewant/node:12.16-alpine
 
 WORKDIR /server
 
