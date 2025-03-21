@@ -84,7 +84,7 @@ async function checkAuthorize(ctx) {
 
 async function loginOrCreate(ctx, email, username, role) {
   //登录
-  console.log('loginOrCreate: ', email, username);
+  console.log('loginOrCreate: ', email, username, role);
   let userInst = yapi.getInst(userModel); //创建user实体
 
   if (!email) {
@@ -124,6 +124,18 @@ async function loginOrCreate(ctx, email, username, role) {
     if (role === 'admin') {
       console.log(`${moment().format('YYYY-MM-DD HH:mm:ss')} [user][admin] update admin on role: ${email}`);
       result.role = 'admin';
+      await result.save();
+    }
+
+    if (username !== result.username) {
+      console.log(`${moment().format('YYYY-MM-DD HH:mm:ss')} [user][update] update username: ${result.username} => ${username}`);
+      result.username = username;
+      await result.save();
+    }
+
+    if (role !== result.role) {
+      console.log(`${moment().format('YYYY-MM-DD HH:mm:ss')} [user][role] update role: ${result.role} => ${role}`);
+      result.role = role;
       await result.save();
     }
 
@@ -290,14 +302,16 @@ async function doreamonOnlySolution(ctx) {
     }
 
     const user = await userRes.json();
-    // console.log('doreamon user: ', user);
+
+    console.log('doreamon user: ', JSON.stringify(user, null, 2));
 
     const email = lodash.get(user, 'email');
     const username = lodash.get(user, 'username');
     const role = lodash.get(user, 'role');
+    const nickname = lodash.get(user, 'nickname');
 
     // check user => login or sso
-    await loginOrCreate(ctx, email, username, role);
+    await loginOrCreate(ctx, email, nickname || username, role);
     await ctx.redirect(`/`);
     return;
   }
