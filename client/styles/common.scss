@@ -229,3 +229,9 @@ em {
     color: #2395f1;
   }
 }
+
+// @TODO
+// 修复 ant design icon 异常问题
+.anticon:before {
+  display: none !important;
+}
