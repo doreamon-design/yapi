@@ -68,7 +68,7 @@ module.exports = async (ctx, next) => {
 
   const startAt = Date.now();
 
-  let aRes;
+  let aRes = {};
 
   try {
     aRes = await axios({
@@ -79,7 +79,8 @@ module.exports = async (ctx, next) => {
       timeout: +process.env.PROXY_TIMEOUT || 5 * 60 * 1000,
     });
   } catch (error) {
-    aRes = error.response;
+    console.log('proxy request error:', error);
+    aRes = error.response || {};
   }
 
 
@@ -87,8 +88,8 @@ module.exports = async (ctx, next) => {
   
   const resParams = {
     // id: 'y-request-0',
-    status: aRes.status,
-    statusText: aRes.statusText,
+    status: aRes.status || 500,
+    statusText: aRes.statusText || 'Internal Server Error',
     // @TODO
     header: aRes.headers,
     body: aRes.data,
