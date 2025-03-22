@@ -39,7 +39,7 @@ const {
 
 const plugin = require('client/plugin.js');
 
-// const createContext = require('common/createContext')
+const createContext = require('common/createContext')
 
 const HTTP_METHOD = constants.HTTP_METHOD;
 const InputGroup = Input.Group;
