@@ -33,7 +33,7 @@ const {
   handleParams,
   checkRequestBodyIsRaw,
   handleContentType,
-  // crossRequest,
+  crossRequest,
   checkNameIsExistInArray
 } = require('common/postmanLib.js');
 
@@ -401,72 +401,72 @@ export default class Run extends Component {
     try {
       options.taskId = this.props.curUid;
   
-      // result = await crossRequest(options, options.pre_script || this.state.pre_script, options.after_script || this.state.after_script, createContext(
-      //   this.props.curUid,
-      //   this.props.projectId,
-      //   this.props.interfaceId
-      // ));
-      //
+      result = await crossRequest(options, options.pre_script || this.state.pre_script, options.after_script || this.state.after_script, createContext(
+        this.props.curUid,
+        this.props.projectId,
+        this.props.interfaceId
+      ));
+      
+      console.log('crossRequest:', options, result);
 
-      const url = new URL(options.url);
-      if (['127.0.0.1', 'localhost'].some(e => e === url.hostname)) {
-        const startAt = new Date();
+      // @TODO disable for safe
+      // const url = new URL(options.url);
+      // if (['127.0.0.1', 'localhost'].some(e => e === url.hostname)) {
+      //   const startAt = new Date();
 
-        /* eslint-disable */
-        // debugger
-        console.log('start...', options);
-        let res;
+      //   /* eslint-disable */
+      //   // debugger
+      //   console.log('start...', options);
+      //   let res;
 
-        // window.axios = axios;
-        // window.options = {
-        //   method: options.method,
-        //   url: options.url,
-        //   headers: options.headers,
-        //   data: options.data,
-        //   timeout: 300000
-        // };
+      //   // window.axios = axios;
+      //   // window.options = {
+      //   //   method: options.method,
+      //   //   url: options.url,
+      //   //   headers: options.headers,
+      //   //   data: options.data,
+      //   //   timeout: 300000
+      //   // };
         
-        try {
-          res = await axios({
-            method: options.method,
-            url: options.url,
-            headers: options.headers,
-            data: options.data,
-            timeout: 300000
-          });
-        } catch (error) {
-          res = error.response;
-        }
+      //   try {
+      //     res = await axios({
+      //       method: options.method,
+      //       url: options.url,
+      //       headers: options.headers,
+      //       data: options.data,
+      //       timeout: 300000
+      //     });
+      //   } catch (error) {
+      //     res = error.response;
+      //   }
 
-        const runTime = new Date() - startAt;
+      //   const runTime = new Date() - startAt;
 
-        result = {
-          req: options,
-          res: {
-            ...res,
-            body: res.data,
-            header: res.headers,
-            status: res.status,
-            statusText: res.statusText
-          },
-          runTime
-        };
+      //   result = {
+      //     req: options,
+      //     res: {
+      //       ...res,
+      //       body: res.data,
+      //       header: res.headers,
+      //       status: res.status,
+      //       statusText: res.statusText
+      //     },
+      //     runTime
+      //   };
 
-      } else {
-        if (options.headers['Content-Type'] && options.headers['Content-Type'].indexOf('multipart/form-data') !== -1) {
-          form.append('method', options.method);
-          form.append('url', options.url);
-          form.append('headers', JSON.stringify(options.headers));
+      // } else {
+      //   if (options.headers['Content-Type'] && options.headers['Content-Type'].indexOf('multipart/form-data') !== -1) {
+      //     form.append('method', options.method);
+      //     form.append('url', options.url);
+      //     form.append('headers', JSON.stringify(options.headers));
 
-          const res = await axios.post('/proxy', form);
-          result = res.data;
-        } else {
-          const res = await axios.post('/proxy', options);
-          result = res.data;
-        }
-      }
-
-      // console.log('crossRequest:', options, result);
+      //     const res = await axios.post('/proxy', form);
+      //     result = res.data;
+      //   } else {
+      //     const res = await axios.post('/proxy', options);
+      //     result = res.data;
+      //   }
+      // }
 
       await plugin.emitHook('after_request', result, {
         type: this.props.type,

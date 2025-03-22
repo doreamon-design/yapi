@@ -8,6 +8,10 @@ module.exports = async (ctx, next) => {
   const path = ctx.path;
   // let header = ctx.request.header;
 
+  if (process.env.ENABLE_PROXY_REQUEST !== 'true') {
+    return await next();
+  }
+
   if (!(_method === 'POST' && path === '/proxy')) {
     return await next();
   }
