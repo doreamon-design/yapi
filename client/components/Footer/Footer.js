@@ -70,7 +70,7 @@ Footer.defaultProps = {
       iconType: 'github',
       linkList: [
         {
-          itemTitle: 'YApi 源码仓库',
+          itemTitle: 'API-DOCS 源码仓库',
           itemLink: 'https://github.com/YMFE/yapi'
         }
       ]

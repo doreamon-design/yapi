@@ -1,6 +1,6 @@
 # 数据导入
 
-在数据管理可快速导入其他格式的接口数据，方便快速添加接口。YApi 目前支持 postman, swagger, har 数据导入。
+在数据管理可快速导入其他格式的接口数据，方便快速添加接口。API-DOCS 目前支持 postman, swagger, har 数据导入。
 
 v1.3.23+ 增加数据导入的3种同步方式  normal, good, mergin
 
@@ -59,7 +59,7 @@ v1.3.23+ 增加数据导入的3种同步方式  normal, good, mergin
 
 <div><img class="doc-img"   style="width:90%"  src="./images/usage/chrome-6.jpg" /></div>
 
-## YApi 接口 JSON 数据导入
+## API-DOCS 接口 JSON 数据导入
 
 该功能在 v1.3.12 版本上线，可导入在 yapi 平台导出的 json 接口数据。
 
@@ -67,7 +67,7 @@ v1.3.23+ 增加数据导入的3种同步方式  normal, good, mergin
 
 ## 通过命令行导入接口数据
 
-YApi 支持通过命令行导入接口数据，他的应用场景是做自动化集成，比如配合 swagger ，接口文档前端不用维护，交由后端生成。
+API-DOCS 支持通过命令行导入接口数据，他的应用场景是做自动化集成，比如配合 swagger ，接口文档前端不用维护，交由后端生成。
 
 ### 使用方法
 

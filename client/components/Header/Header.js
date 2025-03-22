@@ -85,7 +85,7 @@ const tipDoc = (
       使用文档 <Tag color="orange">推荐!</Tag>
     </h3>
     <p>
-      初次使用 YApi，强烈建议你阅读{' '}
+      初次使用 API-DOCS，强烈建议你阅读{' '}
       <a target="_blank" href="/doc/index.html/" rel="noopener noreferrer">
         使用文档
       </a>

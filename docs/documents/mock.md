@@ -1,10 +1,10 @@
 # Mock介绍
 
- <p style='text-indent:2em;line-height:1.8em'>YApi的 Mock 功能可以根据用户的输入接口信息如协议、URL、接口名、请求头、请求参数、返回数据（[返回数据](#mock)）生成 Mock 接口，这些接口会自动生成模拟数据，创建者可以自由构造需要的数据。 </p>
+ <p style='text-indent:2em;line-height:1.8em'>API-DOCS的 Mock 功能可以根据用户的输入接口信息如协议、URL、接口名、请求头、请求参数、返回数据（[返回数据](#mock)）生成 Mock 接口，这些接口会自动生成模拟数据，创建者可以自由构造需要的数据。 </p>
  
- **mock地址解析**：`YApi平台网址 + mock + 您的项目id + 接口实际请求path`
+ **mock地址解析**：`API-DOCS平台网址 + mock + 您的项目id + 接口实际请求path`
 
- 假设你 YApi 的部署地址为：http://yapi.xxx.com 然后用这个地址作为示例
+ 假设你 API-DOCS 的部署地址为：http://yapi.xxx.com 然后用这个地址作为示例
 
     mockd 地址： http://yapi.xxx.com/mock/29/api/hackathon/login
 

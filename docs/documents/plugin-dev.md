@@ -52,7 +52,7 @@ hookname //钩子名
 listener //监听函数，可以是普通函数，也可以是 asyncFunction
 ```
 
-### 如何使用 YApi vendors/server 目录下的模块
+### 如何使用 API-DOCS vendors/server 目录下的模块
 可以直接 require vendors 目录下的模块，注意：后端 node 不能使用 import关键字，只能使用 require
 例如： require('yapi')
 

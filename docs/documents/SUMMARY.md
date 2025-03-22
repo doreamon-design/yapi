@@ -1,8 +1,8 @@
-# YApi
+# API-DOCS
 
 ### 快速上手
 
-* [认识YApi](index.md)
+* [认识API-DOCS](index.md)
 * [创建第一个API](quickstart.md)
 
 ### 进阶篇
@@ -38,17 +38,9 @@
   * [Postman 数据导入](data.md#Postman 数据导入)
   * [HAR 数据导入](data.md#HAR 数据导入)
   * [Swagger 数据导入](data.md#Swagger 数据导入)
-  * [JSON 数据导入](data.md#YApi接口JSON数据导入)
+  * [JSON 数据导入](data.md#API-DOCS接口JSON数据导入)
   * [通过命令行导入接口数据](data.md#通过命令行导入接口数据)
 * [数据导出](export-data.md)
-
-
-### 自定义
-* [插件](plugin-index.md)
-  * [插件开发](plugin-dev.md)
-  * [插件列表](plugin-list.md)
-  * [钩子](plugin-hooks.md)
-* [二次开发](redev.md)
 
 ---
 * [常见问题解答](qa.md)

@@ -1043,7 +1043,7 @@ class InterfaceColContent extends Component {
                 }}
               >
                 {this.props.curProjectRole !== 'guest' && (
-                  <Tooltip title="在 YApi 服务端跑自动化测试，测试环境不能为私有网络，请确保 YApi 服务器可以访问到自动化测试环境domain">
+                  <Tooltip title="在 API-DOCS 服务端跑自动化测试，测试环境不能为私有网络，请确保 API-DOCS 服务器可以访问到自动化测试环境domain">
                     <Button
                       style={{
                         marginRight: '8px'
@@ -1245,7 +1245,7 @@ class InterfaceColContent extends Component {
               </Col>
             </Row>
             <div className="autoTestMsg">
-              注：访问该URL，可以测试所有用例，请确保YApi服务器可以访问到环境配置的 domain
+              注：访问该URL，可以测试所有用例，请确保API-DOCS服务器可以访问到环境配置的 domain
             </div>
           </Modal>
         )}

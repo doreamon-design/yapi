@@ -1,7 +1,7 @@
 {
   "name": "yapi-vendor",
   "version": "4.4.22",
-  "description": "YAPI",
+  "description": "APIDOCS",
   "repository": {
     "type": "git",
     "url": "git@github.com:YMFE/yapi.git"

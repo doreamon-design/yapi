@@ -1,4 +1,4 @@
-## YApi  可视化接口管理平台
+## API-DOCS  可视化接口管理平台
 
 文档：
 <p><a target="_blank" href="/doc/index.html">hellosean1025.github.io/yapi</a></p>
@@ -6,7 +6,7 @@
 ### 平台介绍
 ![avatar](yapi-base-flow.jpg)
 
-YApi 是<strong>高效</strong>、<strong>易用</strong>、<strong>功能强大</strong>的 api 管理平台，旨在为开发、产品、测试人员提供更优雅的接口管理服务。可以帮助开发者轻松创建、发布、维护 API，YApi 还为用户提供了优秀的交互体验，开发人员只需利用平台提供的接口数据写入工具以及简单的点击操作就可以实现接口的管理。
+API-DOCS 是<strong>高效</strong>、<strong>易用</strong>、<strong>功能强大</strong>的 api 管理平台，旨在为开发、产品、测试人员提供更优雅的接口管理服务。可以帮助开发者轻松创建、发布、维护 API，API-DOCS 还为用户提供了优秀的交互体验，开发人员只需利用平台提供的接口数据写入工具以及简单的点击操作就可以实现接口的管理。
 
 **QQ交流群**:
 
@@ -29,7 +29,7 @@ YApi 是<strong>高效</strong>、<strong>易用</strong>、<strong>功能强大
 * mongodb（2.6+）
 * git
 #### 安装
-使用我们提供的 yapi-cli 工具，部署 YApi 平台是非常容易的。执行 yapi server 启动可视化部署程序，输入相应的配置和点击开始部署，就能完成整个网站的部署。部署完成之后，可按照提示信息，执行 node/{网站路径/server/app.js} 启动服务器。在浏览器打开指定url, 点击登录输入您刚才设置的管理员邮箱，默认密码为 ymfe.org 登录系统（默认密码可在个人中心修改）。
+使用我们提供的 yapi-cli 工具，部署 API-DOCS 平台是非常容易的。执行 yapi server 启动可视化部署程序，输入相应的配置和点击开始部署，就能完成整个网站的部署。部署完成之后，可按照提示信息，执行 node/{网站路径/server/app.js} 启动服务器。在浏览器打开指定url, 点击登录输入您刚才设置的管理员邮箱，默认密码为 ymfe.org 登录系统（默认密码可在个人中心修改）。
 
     npm install -g yapi-cli --registry https://registry.npmmirror.com
     yapi server 
@@ -53,11 +53,11 @@ YApi 是<strong>高效</strong>、<strong>易用</strong>、<strong>功能强大
     yapi update -v {Version} //更新到指定版本
     
 ### 教程
-* [使用 YApi 管理 API 文档，测试， mock](https://juejin.im/post/5acc879f6fb9a028c42e8822)
-* [自动更新 Swagger 接口数据到 YApi 平台](https://juejin.im/post/5af500e251882567096140dd)
+* [使用 API-DOCS 管理 API 文档，测试， mock](https://juejin.im/post/5acc879f6fb9a028c42e8822)
+* [自动更新 Swagger 接口数据到 API-DOCS 平台](https://juejin.im/post/5af500e251882567096140dd)
 * [自动化测试](https://juejin.im/post/5a388892f265da430e4f4681)
 
-### YApi 插件
+### API-DOCS 插件
 * [yapi sso 登录插件](https://github.com/YMFE/yapi-plugin-qsso)
 * [yapi cas 登录插件](https://github.com/wsfe/yapi-plugin-cas) By wsfe
 * [yapi gitlab集成插件](https://github.com/cyj0122/yapi-plugin-gitlab)
@@ -69,24 +69,24 @@ YApi 是<strong>高效</strong>、<strong>易用</strong>、<strong>功能强大
 * [import-swagger-customize](https://github.com/follow-my-heart/yapi-plugin-import-swagger-customize) 导入指定swagger接口
 
 ### 代码生成
-* [yapi-to-typescript：根据 YApi 的接口定义生成 TypeScript 的请求函数](https://github.com/fjc0k/yapi-to-typescript)
-* [yapi-gen-js-code: 根据 YApi 的接口定义生成 javascript 的请求函数](https://github.com/hellosean1025/yapi-gen-js-code)
+* [yapi-to-typescript：根据 API-DOCS 的接口定义生成 TypeScript 的请求函数](https://github.com/fjc0k/yapi-to-typescript)
+* [yapi-gen-js-code: 根据 API-DOCS 的接口定义生成 javascript 的请求函数](https://github.com/hellosean1025/yapi-gen-js-code)
 
-### YApi docker部署（非官方）
+### API-DOCS docker部署（非官方）
 * [使用 alpine 版 docker 镜像快速部署 yapi](https://www.jianshu.com/p/a97d2efb23c5)
 * [docker-yapi](https://github.com/Ryan-Miao/docker-yapi)
 * [docker-compose一键部署yapi](https://github.com/jinfeijie/yapi)
-* [docker-YApi: 更易用的 YApi 镜像](https://github.com/fjc0k/docker-YApi)
+* [docker-API-DOCS: 更易用的 API-DOCS 镜像](https://github.com/fjc0k/docker-API-DOCS)
 * [使用DockerCompose构建部署Yapi](https://github.com/MyHerux/daily-code/blob/master/Program/%E5%B7%A5%E5%85%B7%E7%AF%87/Yapi/%E4%BD%BF%E7%94%A8DockerCompose%E6%9E%84%E5%BB%BA%E9%83%A8%E7%BD%B2Yapi.md)
 
-### YApi 一些工具
+### API-DOCS 一些工具
 * [Api Generator](https://github.com/Forgus/api-generator) 接口文档自动生成插件（零入侵）
 * [mysql服务http工具,可配合做自动化测试](https://github.com/hellosean1025/http-mysql-server)
 * [idea 一键上传接口到yapi插件](https://github.com/diwand/YapiIdeaUploadPlugin)
 * [idea 接口上传调试插件 easy-yapi](https://easyyapi.com/)
 * [执行 postgres sql 的服务](https://github.com/shouldnotappearcalm/http-postgres-server)
 
-### YApi 的一些客户
+### API-DOCS 的一些客户
 * 去哪儿
 * 携程
 * 艺龙 
